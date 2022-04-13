@@ -1,0 +1,110 @@
+<section class="text__with__image">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 text-center">
+                {% if section.settings.title != empty %}
+                    <div class="title">
+                        <h2 class="mt-0">{{section.settings.title}}</h2>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            {% for block in section.blocks %}
+
+                {% include 'text-with-image' %}
+
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+
+{% schema %}
+{
+    "name": "Text With Image",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Title"
+        },
+        {
+            "type":     "text",
+            "id":       "title",
+            "label":    "Title"
+        }
+    ],
+    "blocks": [
+		{
+			"type": "text_with_image",
+			"name": "Text With Image",
+            "settings": [
+                {
+                    "type": 	"header",
+                    "content": 	"Image Options"
+                },
+                {
+                    "type":      "select",
+                    "id":        "image_position",
+                    "label":     "Image Position",
+                    "info":      "Will stack as normal on mobile",
+                    "options": [
+                        {
+                            "value": "Left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "Right",
+                            "label": "Right"
+                        }
+                    ],
+                    "default":   "Left"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image - Desktop",
+                    "info": "Optimal image size: 720 x 500"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_mob",
+                    "label": "Image - Mobile",
+                    "info": "Optimal image size: 420 x 285"
+                },
+                {
+                    "type": "url",
+                    "id": "image_url",
+                    "label": "Image - URL"
+                },
+                {
+                    "type": 	"header",
+                    "content": 	"Content Options"
+                },
+                {
+                    "type":     "text",
+                    "id":       "number",
+                    "label":    "Number"
+                },
+                {
+                    "type":     "text",
+                    "id":       "heading",
+                    "label":    "Heading"
+                },
+                {
+                    "type":     "richtext",
+                    "id":       "copy",
+                    "label":    "Copy"
+                }
+            ]
+        }
+    ],
+	"presets": [
+    {
+      "name":       "Text With Image",
+      "category":   "Content"
+    }
+  ]
+}
+{% endschema %}

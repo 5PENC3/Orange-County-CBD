@@ -1,0 +1,77 @@
+<section class="featured__collections">
+  <div class="container-fluid p-lg-0">
+      {% if section.settings.title != empty %}
+          <div class="row">
+              <div class="col-12">
+                  <h2 class="text-center mt-0">{{ section.settings.title }}</h2>
+              </div>
+          </div>
+      {% endif %}
+      <div class="row">
+          <div class="col-12">
+            <div class="featured-collections-slick">
+
+              {% for block in section.blocks %}
+          
+                  {% assign collection = collections[block.settings.collection] %}
+              
+                  <div class="featured__collection text-center" data-col-equalize="title">
+
+                      <a href="{{ collection.url }}" class="image__holder">
+                        <img data-src="{{ collection.image | img_url: '215x' }}" class="d-none d-md-block img-fluid img-full mx-auto lazyload" alt="Featured Collection Image">
+                        <img data-src="{{ collection.image | img_url: '150x' }}" class="d-block d-md-none img-fluid img-full mx-auto lazyload" alt="Featured Collection Image">
+                      </a>
+          
+                      <div class="details">
+                        <a href="{{ collection.url }}" class="title"><p class="mb-0" data-col-equalize-watch="title">{{ collection.title }}</p></a>
+                        <a href="{{ collection.url }}" class="btn btn-primary btn-100">{{ section.settings.coll_cta_text }}</a>
+                      </div>
+                      
+                  </div>
+                  
+              {% endfor %}
+
+          </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Featured Collections",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "text",
+        "id": "coll_cta_text",
+        "label": "Button Text",
+        "info": "Text for the buttons on each Item"
+      }
+    ],
+    "blocks": [
+        {
+            "type": "collection",
+            "name": "Collection",
+            "settings": [
+                {
+                   "type": "collection",
+                   "id": "collection",
+                   "label": "Please select a Collection"
+                }
+            ]
+        }
+    ],
+    "presets": [
+      {
+        "name": "Featured Collections",
+        "category": "Collections"
+      }
+    ]
+  }
+
+{% endschema %}

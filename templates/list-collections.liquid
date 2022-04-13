@@ -1,0 +1,45 @@
+{% comment %}
+  This page represents the /collections and /products pages.
+{% endcomment %}
+
+<div class="container-fluid collection__hero p-0 no__bg">
+
+    <div class="col-12 col-md-7 col-xl-5 content">
+        <div class="text">
+            <h1>{{ page_title }}</h1>
+        </div>
+    </div>
+
+</div><!-- container -->
+
+<div class="container mt-5 all__collections">
+	<div class="row">
+		<div class="col-12">
+      <div class="row">
+      {% for collection in collections %}
+        {%- comment %}<locksmith:426d>{% endcomment -%}
+          {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: collection, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+        {%- comment %}</locksmith:426d>{% endcomment -%}
+        {% unless collection.handle == 'frontpage' %}
+          <div class="col-6 col-md-4 col-lg-3 item">
+          <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: title }}" class="fixed-ratio portrait-crop">
+            {% if collection.image != blank %}
+              {{ collection | img_url: '480x' | img_tag: collection.title, 'img-fluid' }}
+            {% elsif collection.products.first != blank %}
+              {{ collection.products.first | img_url: '480x' | img_tag: collection.title, 'img-fluid' }}
+            {% else %}
+              {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+              {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg placeholder-svg--small' }}
+            {% endif %}
+          </a>
+
+          <p class="py-3 text-center collection-list-links">
+            <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: title }}">{{ collection.title }}</a>
+          </p> 
+          </div>
+        {% endunless %}
+      {% endfor %}
+      </div>
+		</div><!-- col -->
+	</div><!-- row -->
+</div><!-- container -->

@@ -1,0 +1,128 @@
+{% paginate blog.articles by 12 %}
+
+    {% include 'hero-large' %}
+
+    <div class="container">
+        <div class="mt-3 row">
+            <div class="pb-3 text-center col-12 d-none return-to-blog">
+                <a href="/blogs/latest">Return to Blog</a>
+            </div>
+            <div class="text-center col-12">
+                {% if blog.all_tags.size > 0 %}
+                    <!-- <div class="blog-tags">
+                        <ul>
+                            {% for tag in blog.all_tags %}
+                                {% if current_tags contains tag %}
+                                    <li>{{ tag | link_to_add_tag: tag | replace: 'title=', 'class="btn btn-secondary tag-link active" title=' }}</li>
+                                {% else %}
+                                    <li>{{ tag | link_to_add_tag: tag | replace: 'title=', 'class="btn btn-secondary tag-link" title=' }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div> -->
+                    {% endif%}
+                </div><!-- col -->
+            </div><!-- row -->
+        </div><!-- container -->
+
+        <div class="container-fluid">
+            <div class="row featured__blogs no-gutters article__holder">
+                {% for article in blog.articles %}
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-flex">{% include 'blog-article' %}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if paginate.next %}
+            <div class="d-flex justify-content-center mt-4">
+                <a href="{{ paginate.next.url }}" id="show-more" class="btn btn-primary">
+                    <div class="loader"></div>
+                    <span>{{ "blogs.general.show_more" | t }}</span>
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+{% assign dm_paginate_by = paginate.page_size %}{% endpaginate %}
+
+{% if dm_paginate_by %}{% render 'spurit_dmr_collection_template_snippet', paginate_by: dm_paginate_by %}{% endif %}{% schema %}
+{
+  "name": "Blog Listing",
+	"settings": [
+        {
+            "type": "header",
+            "content": "Content settings"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "select",
+            "id": "content_color",
+            "label": "Content Colour",
+            "options": [
+                {
+                    "value": "#ffffff",
+                    "label": "Light"
+                },
+                {
+                    "value": "#322d26",
+                    "label": "Dark"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "content_alignment",
+            "label": "Content Alignment",
+            "options": [
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Image settings"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image - Desktop",
+            "info": "Optimal image size: 1440 x 670"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_mob",
+            "label": "Image - Mobile",
+            "info": "Optimal image size: 414 x 554"
+        },
+        {
+            "type": "header",
+            "content": "Additional settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_breadcrumbs",
+            "label": "Show Breadcrumbs",
+            "default": true
+        }
+	]
+}
+{% endschema %}

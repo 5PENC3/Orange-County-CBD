@@ -1,0 +1,225 @@
+{% assign hero_title = 'Hi ' | append: customer.first_name | append: ', Welcome Back' %}
+{% include 'hero-large', hero_title: hero_title %}
+
+<div class="container my-5">
+    <div class="row">
+        <section class="col-12">
+            {% if customer.orders.size != 0 %}
+
+                <div class="orders">
+                    {% paginate customer.orders by 20 %}
+                        {% for order in customer.orders %}
+                            <article class="mb-3 order">
+                                <header class="row align-items-center">
+                                    <div class="flex-grow-0 mb-3 col-12 mb-md-0 col-md d-none d-lg-block">
+                                        <img alt="{{ order.image.alt }}" class="order__image" src="{{ order.image | img_url: '100x100' }}" width="100">
+                                    </div>
+                                    <div class="mb-3 col-12 mb-md-0 col-md">
+                                        <strong>Order number</strong>
+                                        {{ order.order_number }}
+                                    </div><!-- /Order number -->
+                                    <div class="mb-3 col-12 mb-md-0 col-md">
+                                        <strong>Order date</strong>
+                                        {{ order.created_at | date: format: 'month_day_year' }}
+                                    </div><!-- /Order date -->
+                                    <div class="mb-3 col-12 mb-md-0 col-md">
+                                        <strong>Total</strong>
+                                        {{ order.total_price | money }}
+                                    </div><!-- /Total -->
+                                    <div class="mb-3 col-12 mb-md-0 col-md">
+                                        <strong>Status</strong>
+                                        {% if order.cancelled %}
+                                            {{order.cancel_reason_label}}
+                                        {% else %}
+                                            {{ order.fulfillment_status }}
+                                        {% endif %}
+                                    </div><!-- /Status -->
+                                    <div class=" col-12 mb-md-0 col-md">
+                                        <a class="order__details-btn order__details-btn--show btn btn-primary" href="#">View details</a>
+                                        <a class="order__details-btn order__details-btn--hide btn btn-dark" href="#">Hide details</a>
+                                    </div><!-- /Details -->
+                                </header>
+
+                                <div class="order__details">
+                                    <hr class="my-4">
+
+                                    <section class="row">
+                                        <div class="mb-4 col-12 col-md-6 col-lg-3">
+                                            <strong class="mb-2">Shipping Address</strong>
+                                            <div>
+                                                {{ order.shipping_address.first_name }}
+                                                {{ order.shipping_address.last_name }}
+                                            </div>
+                                            <div>{{ order.shipping_address.address1 }}</div>
+                                            <div>{{ order.shipping_address.address2 }}</div>
+                                            <div>{{ order.shipping_address.city }}</div>
+                                            <div>{{ order.shipping_address.zip }}</div>
+                                        </div>
+                                        <div class="mb-4 col-12 col-md-6 col-lg-3">
+                                            <strong class="mb-2">Billing Address</strong>
+                                            <div>
+                                                {{ order.billing_address.first_name }}
+                                                {{ order.billing_address.last_name }}
+                                            </div>
+                                            <div>{{ order.billing_address.address1 }}</div>
+                                            <div>{{ order.billing_address.address2 }}</div>
+                                            <div>{{ order.billing_address.city }}</div>
+                                            <div>{{ order.billing_address.zip }}</div>
+                                        </div>
+                                        <div class="mb-4 col-12 col-md-6 col-lg-3">
+                                            <strong class="mb-2">Shipping Methods</strong>
+                                            {% for method in order.shipping_methods %}
+                                                {{ method.title }}
+                                            {% endfor %}
+                                        </div>
+                                    </section>
+
+                                    <hr class="mt-0 mb-4">
+
+                                    <section class="row">
+                                        {% for item in order.line_item %}
+                                            <div class="mb-4 col-12 col-md-6 col-lg-4">
+                                                <div class="row">
+                                                    <div class="flex-grow-0 col">
+                                                        <img alt="{{ item.image.alt }}" class="order__image" src="{{ item.image | img_url: '100x100' }}" width="100">
+                                                    </div>
+                                                    <div class="col">
+                                                        <strong>{{ item.title }}</strong>
+                                                        <div class="">Qty:
+                                                            {{ item.quantity }}</div>
+                                                        <div class="text-tertiary">{{ item.unit_price  | money }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </section>
+
+                                    <hr class="mt-0 mb-4">
+
+                                    <footer class="row">
+                                        <div class="mb-3 col-12 mb-md-0 col-md">
+                                            <strong>Subtotal</strong>
+                                            {{ order.subtotal_price | money }}
+                                        </div>
+                                        <div class="mb-3 col-12 mb-md-0 col-md">
+                                            <strong>Total</strong>
+                                            {{ order.total_price | money }}
+                                        </div>
+                                        <!-- <div class="mb-3 col-12 mb-md-0 col-md">
+                                            <a href="#">Download Invoice</a>
+                                        </div> -->
+                                    </footer>
+                                </div><!-- /order details -->
+                            </article>
+                        {% endfor %}
+                        {% if paginate.pages > 1 %}
+                            {% include 'pagination' %}
+                        {% endif %}
+                    {% assign dm_paginate_by = paginate.page_size %}{% endpaginate %}
+                </div>
+
+            {% else %}
+                <div class="d-flex align-items-center flex-column">
+                    <p class="my-5 text-center">{{ 'customer.orders.none' | t }}</p>
+                    {% if section.settings.no_orders_cta != blank %}
+                        <a class="btn btn-primary" href="{{ section.settings.no_orders_cta }}">Browse Products</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </section><!-- section -->
+    </div>
+</div>
+
+
+{% if dm_paginate_by %}{% render 'spurit_dmr_collection_template_snippet', paginate_by: dm_paginate_by %}{% endif %}{% schema %}
+{
+    "name": "Account",
+	"settings": [
+        {
+            "type": "header",
+            "content": "Content settings"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "select",
+            "id": "content_color",
+            "label": "Content Colour",
+            "options": [
+                {
+                    "value": "#ffffff",
+                    "label": "Light"
+                },
+                {
+                    "value": "#322d26",
+                    "label": "Dark"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "content_alignment",
+            "label": "Content Alignment",
+            "options": [
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Image settings"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image - Desktop",
+            "info": "Optimal image size: 1440 x 670"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_mob",
+            "label": "Image - Mobile",
+            "info": "Optimal image size: 414 x 554"
+        },
+        {
+            "type": "header",
+            "content": "Additional settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_breadcrumbs",
+            "label": "Show Breadcrumbs",
+            "default": true
+        },
+        {
+            "type": "link_list",
+            "id": "links",
+            "label": "Links"
+        },
+        {
+            "type": "url",
+            "id": "no_orders_cta",
+            "label": "No Orders CTA",
+            "info": "Shows when the user has no orders"
+        }
+	]
+}
+{% endschema %}

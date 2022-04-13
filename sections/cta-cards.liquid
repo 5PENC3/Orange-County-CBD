@@ -1,0 +1,67 @@
+<div class="container">
+    <section class="cta__cards">
+
+        {% for block in section.blocks %}
+            <div class="card-wrapper col-12 col-lg-4">
+                {% assign img_src = block.settings.image | img_url: '450x' %}
+                <article class="card" style="background-image: url('{{ img_src }}');">
+                    <header class="mb-0">
+                        <h3 class="card__title">{{ block.settings.title }}</h3>
+                    </header>
+                    <p class="card__content">{{ block.settings.copy }}</p>
+                    <footer>
+                        <a href="{{ block.settings.card_link }}" class="btn btn-primary">{{ block.settings.card_link_text }}</a>
+                    </footer>
+                </article>
+            </div>
+        {% endfor %}
+    </section>
+</div>
+
+{% schema %}
+{
+    "name": "CTA Cards",
+    "blocks": [
+        {
+            "type": "Card",
+            "name": "Card",
+            "settings": [
+                {
+                    "type": 	"header",
+                    "content": 	"Images"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Standard Image",
+                    "info": "Optimal image size: 420 x 400"
+                },
+                {
+                    "type": 	"header",
+                    "content": 	"Content"
+                },
+                {
+                    "type":     "text",
+                    "id":       "title",
+                    "label":    "Title"
+                },
+                {
+                    "type":     "text",
+                    "id":       "copy",
+                    "label":    "Copy"
+                },
+                {
+                    "type":      "url",
+                    "id":        "card_link",
+                    "label":     "Button Link"
+                },
+                {
+                    "type":     "text",
+                    "id":       "card_link_text",
+                    "label":    "Button Text"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

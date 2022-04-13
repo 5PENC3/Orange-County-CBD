@@ -1,0 +1,462 @@
+{% comment %}
+This is section that can be moved and placed anywhere on the page.
+
+You will need:
+ 
+- Slick CDN files (found in the layout/theme.liquid)
+- Custom Styles (found in styles/sections/hero.scss)
+{% endcomment %}
+
+{% assign slickInfinite = section.settings.slide_infinite %}
+{% assign slickDots = false %}
+{% assign slickArrows = section.settings.slide_arrows %}
+{% assign slickAutoplay = section.settings.slide_autoplay %}
+{% assign slickSpeed = section.settings.slide_speed %}
+
+{% capture slide_settings %}{"slidesToShow": 1, "slidesToScroll": 1, "arrows":{{slickArrows}}, "autoplay":{{slickAutoplay}}, "autoplaySpeed": {{slickSpeed}}, "dots": {{slickDots}}, "infinite": {{slickInfinite}}}{% endcapture %}
+
+<div class="hero">
+    <div class="hero-slick" data-slick='{{ slide_settings }}'>
+        {% for block in section.blocks %}
+            {% case block.type %}
+                {% when 'slide' %}
+                    <div class="hero-item">
+                        {% if block.settings.background_type == 'image' %}
+                            <div class="d-none d-md-block hero-image" style="background-image: url('{{ block.settings.widescreen_hero_image | img_url: '1920x' }}')">
+                                {% if block.settings.widescreen_hero_image != blank %}
+
+                                    {% if block.settings.hero_slide_link != blank %}
+										<a href="{{block.settings.hero_slide_link}}">
+									{% endif %}
+
+									{% if block.settings.hero_overlay_check == true %}
+										<span class="hero-overlay black opacity-{{block.settings.hero_overlay_opacity}}"></span>
+									{% endif %}
+
+									<picture>
+										<source media="(max-width: 767px)" srcset="{{ block.settings.portrait_hero_image | img_url: '540x' }}">
+										<source media="(max-width: 800px)" srcset="{{ block.settings.widescreen_hero_image | img_url: '1440x' }}">
+										<source media="(max-width: 1440px)" srcset="{{ block.settings.widescreen_hero_image | img_url: '1920x' }}">
+										<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ block.settings.widescreen_hero_image | img_url: '1920x' }}" class="lazyload" alt="{{ block.settings.widescreen_hero_image.alt }}">
+									</picture>
+
+									{% if block.settings.hero_slide_link != blank %}
+                                        </a>
+                                    {% endif %}
+
+                                {% else %}
+                                    {{ 'image' | placeholder_svg_tag: 'hero-placeholder img-fluid' }}
+                                {% endif %}
+                            </div>
+							<div class="d-block d-md-none hero-image" style="background-image: url('{{ block.settings.portrait_hero_image | img_url: '540x' }}')">
+                                {% if block.settings.widescreen_hero_image != blank %}
+
+                                    {% if block.settings.hero_slide_link != blank %}
+										<a href="{{block.settings.hero_slide_link}}">
+									{% endif %}
+
+									{% if block.settings.hero_overlay_check == true %}
+										<span class="hero-overlay black opacity-{{block.settings.hero_overlay_opacity}}"></span>
+									{% endif %}
+
+									<picture>
+										<source media="(max-width: 767px)" srcset="{{ block.settings.portrait_hero_image | img_url: '540x' }}">
+										<source media="(max-width: 800px)" srcset="{{ block.settings.widescreen_hero_image | img_url: '1440x' }}">
+										<source media="(max-width: 1440px)" srcset="{{ block.settings.widescreen_hero_image | img_url: '1920x' }}">
+										<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ block.settings.widescreen_hero_image | img_url: '1920x' }}" class="lazyload" alt="{{ block.settings.widescreen_hero_image.alt }}">
+									</picture>
+
+									{% if block.settings.hero_slide_link != blank %}
+                                        </a>
+                                    {% endif %}
+
+                                {% else %}
+                                    {{ 'image' | placeholder_svg_tag: 'hero-placeholder img-fluid' }}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="hero-video">
+                                <video {% if block.settings.video_loop == true %} loop {% endif%} muted playsinline autoplay controlslist="nofullscreen nodownload">
+                                    <source src="{{ block.settings.video_source }}" type="video/mp4">
+                                </video>
+                            </div>
+                        {% endif %}
+
+                        {% if block.settings.hero_content_check == true and block.settings.background_type == 'image' %}
+                            <div class="hero-content {{block.settings.content_vertical_position}}">
+                                <div class="container">
+                                    <div class="row {{block.settings.content_horizontal_position}}">
+                                        <div class="col-12 col-md-{{block.settings.tablet_col_size}} col-lg-{{block.settings.desktop_col_size}}">
+                                            {% if block.settings.hero_title != blank or block.settings.hero_content != blank %}
+                                                <div class="content {% if block.settings.hero_button_check == true %}content-btn{% endif%} {{block.settings.content_text_colour}} {{block.settings.content_text_alignment}}">
+                                                    {% if block.settings.hero_title != empty %}
+														{% if template contains 'index' %}
+                                                        	<h2 class="m-0 main">{{ block.settings.hero_title }}</h2>
+														{% else %}
+															<h1 class="m-0 main">{{ block.settings.hero_title }}</h1>
+														{% endif %}
+                                                    {% endif %}
+                                                    {% if block.settings.hero_subtitle != empty %}
+                                                        <h2 class="mb-0 hero__subtitle {{block.settings.hero_subtitle_size}}">{{ block.settings.hero_subtitle }}</h2>
+                                                    {% endif %}
+                                                    {% if block.settings.hero_button_check == true %}
+                                                        <a href="{{ block.settings.hero_slide_link }}" class="btn btn-primary">{{ block.settings.hero_button_text }}</a>
+                                                    {% endif %}
+                                                </div><!-- content -->
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!-- row -->
+                                </div><!-- container -->
+                            </div><!-- hero-content -->
+                        {% endif  %}
+
+                    </div>
+            {% endcase %}
+        {% endfor %}
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Hero",
+    "max_blocks": 3,
+    "settings": [
+       	{
+		    "type": "header",
+			"content": "Slider Options"
+		},
+		{
+			"type": "checkbox",
+			"id": "slide_infinite",
+			"label": "Infinite Loop?",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "slide_arrows",
+			"label": "Arrows?",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "slide_autoplay",
+			"label": "Autoplay?",
+			"default": false
+		},
+		{
+			"type": "range",
+			"id": "slide_speed",
+			"label": "Speed",
+			"min": 1000,
+			"max": 5000,
+			"step": 1000,
+			"default": 2000,
+			"info": "1000 = 1 Second"
+		}
+	],
+    "blocks": [
+		{
+			"type": "slide",
+			"name": "Slide",
+			"settings": [
+			{
+				"type":      "select",
+				"id":        "background_type",
+				"label":     "Background Type",
+				"options": [
+					{
+						"value": "image",
+						"label": "Image"
+					},
+					{
+						"value": "video",
+						"label": "Video"
+					}
+				],
+				"default":   "image"
+				},
+				{
+					"type": 	"header",
+					"content": 	"Images"
+				},
+				{
+					"type": 	"paragraph",
+					"content": 	"Will only apply if 'image' is selected above"
+				},
+		    	{
+					"type": 	"header",
+					"content": 	"Desktop Image"
+				},
+			  	{
+				  "type": "image_picker",
+				  "id": "widescreen_hero_image",
+				  "label": "Widescreen Image",
+				  "info": "Optimal image size: 1920 x 720, the image ratio is 8 / 3."
+				},
+				{
+					"type": 	"header",
+					"content": 	"Mobile Image"
+				},
+				{
+				  "type": "image_picker",
+				  "id": "portrait_hero_image",
+				  "label": "Standard Image",
+				  "info": "Optimal image size: 540 x 540, the image ratio is 4 / 4."
+				},
+				{
+					"type": 	"header",
+					"content": 	"Video"
+				},
+				{
+					"type": 	"paragraph",
+					"content": 	"Will only apply if 'video' is selected above"
+				},
+				{
+                    "type":     "paragraph",
+                    "content":  "Please upload your MP4 to the files section (Settings - Files - Upload). The video will then be in the slide, be muted, and autoplay"
+                },
+                {
+                    "type":     "text",
+                    "id":       "video_source",
+                    "label":    "Video URL"
+                },
+                {
+                    "type":     "checkbox",
+                    "id":       "video_loop",
+                    "default":  true,
+                    "label":    "Loop Video?"
+                },
+				{
+					"type": 	"header",
+					"content": 	"Hero Link"
+				},
+				{
+				   "type":      "url",
+				   "id":        "hero_slide_link",
+				   "label":     "Banner Link",
+				   "info":		"Banner clickable everywhere, regardless if a button is added"
+				},
+				{
+					"type": 	"header",
+					"content": 	"Hero Content"
+				},
+				{
+                    "type":     "paragraph",
+                    "content":  "Will only apply if 'image' is selected above"
+                },
+				{
+					"type": 		"checkbox",
+					"id": 			"hero_content_check",
+					"label": 		"Show Content?",
+					"default": 	true
+				},
+				{
+				   "type":      "text",
+				   "id":        "hero_title",
+				   "label":     "Title",
+				   "default":   "Hero Title"
+				},
+				{
+				   "type":      "text",
+				   "id":        "hero_subtitle",
+				   "label":     "Hero Subtitle"
+				},
+				{
+					"type":      "select",
+					"id":        "hero_subtitle_size",
+					"label":     "Hero Subtitle Size",
+					"options": [
+						{
+							"value": "small",
+							"label": "Small"
+						},
+						{
+							"value": "medium",
+							"label": "Medium"
+						},
+						{
+							"value": "large",
+							"label": "Large"
+						}
+					],
+					"default":   "medium"
+				},
+				{
+					"type": "checkbox",
+					"id": "hero_button_check",
+					"label": "Need a button?",
+					"info":		"Banner clickable everywhere, regardless if a button is added",
+					"default": false
+				},
+				{
+				   "type":      "text",
+				   "id":        "hero_button_text",
+				   "label":     "Button Text",
+				   "default":   "Shop Now"
+				},
+				 {
+					"type": 	"header",
+					"content": 	"Positioning",
+					"info": 	"Applies across both desktop and mobile"
+				},
+				{
+					"type":      "select",
+					"id":        "content_text_alignment",
+					"label":     "Content Text Alignment",
+					"info":  	 "Will center align on mobile",
+					"options": [
+						{
+							"value": "text__left",
+							"label": "Left"
+						},
+						{
+							"value": "text__center",
+							"label": "Middle"
+						},
+						{
+							"value": "text__right",
+							"label": "Right"
+						}
+					],
+					"default":   "text__center"
+				},
+				{
+					"type": "header",
+					"content": "Content Text Colour"
+				},
+				{
+					"type":      "select",
+					"id":        "content_text_colour",
+					"label":     "Content Text Colour",
+					"info":  	 "Applies to the Title and Subtitle",
+					"options": [
+						{
+							"value": "white",
+							"label": "White"
+						},
+						{
+							"value": "black",
+							"label": "Black"
+						},
+						{
+							"value": "orange",
+							"label": "Orange"
+						}
+					],
+					"default":   "white"
+				},
+				{
+					"type": "header",
+					"content": "Overlay Config"
+				},
+				{
+					"type": 		"checkbox",
+					"id": 			"hero_overlay_check",
+					"label": 		"Need a overlay?",
+					"default": 	true,
+					"info":			"An overlay creates a contrast between the image and content"
+				},
+				{
+					"type": 		"range",
+					"id": 			"hero_overlay_opacity",
+					"label": 		"Hero Overlay Opacity",
+					"min": 			1,
+					"max": 			9,
+					"step": 		1,
+					"default": 	1
+				},
+				{
+					"type": 	"header",
+					"content": 	"Content Positioning"
+				},
+				{
+				  	"type": 	"paragraph",
+				  	"content": 	"Determine where the content should be positioned both vertical and horizontal."
+				},
+				{
+					"type":      "select",
+					"id":        "content_vertical_position",
+					"label":     "Content Vertical Position",
+					"info":  	 "Will move to the top on mobile",
+					"options": [
+						{
+							"value": "hero-content-top",
+							"label": "Top"
+						},
+						{
+							"value": "hero-content-middle",
+							"label": "Middle"
+						},
+						{
+							"value": "hero-content-bottom",
+							"label": "Bottom"
+						}
+					],
+					"default":   "hero-content-bottom"
+				},
+				{
+					"type":      "select",
+					"id":        "content_horizontal_position",
+					"label":     "Content Horizontal Position",
+					"options": [
+						{
+							"value": "justify-content-start",
+							"label": "Left"
+						},
+						{
+							"value": "justify-content-center",
+							"label": "Middle"
+						},
+						{
+							"value": "justify-content-end",
+							"label": "Right"
+						}
+					],
+					"default":   "justify-content-center"
+				},
+				{
+					"type": 	"header",
+					"content": 	"Content Size"
+				},
+				{
+				  	"type": 	"paragraph",
+				  	"content": 	"Select the size of the content for Tablet and Desktop."
+				},
+				{
+					"type": 	"range",
+					"id": 		"desktop_col_size",
+					"label": 	"Desktop Content Width",
+					"min": 		1,
+					"max": 		12,
+					"step": 	1,
+					"default": 	7,
+					"info": 	"1 being the smallest and 12 being full width"
+				},
+				{
+					"type": 	"range",
+					"id": 		"tablet_col_size",
+					"label": 	"Tablet Content Width",
+					"min": 		1,
+					"max": 		12,
+					"step": 	1,
+					"default": 	9,
+					"info": 	"1 being the smallest and 12 being full width"
+				}
+			]
+		}
+	],
+	"presets": [
+    {
+      "name": "Hero Slider",
+      "category": "Images",
+      "blocks": [
+        { 
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+	
+}
+{% endschema %}

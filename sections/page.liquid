@@ -1,0 +1,25 @@
+{% include 'page-standard' %}
+
+{% schema %}
+{
+  "name": "Page",
+  "blocks": [
+		{
+			"type": "tab",
+			"name": "Tabs",
+			"settings": [
+				{
+					"type": "text",
+					"id": "tab_title",
+					"label": "Tab Title"
+				},
+				{
+					"type": "richtext",
+					"id": "tab_content",
+					"label": "Tab Content"
+				}
+			]
+		}
+  ]
+}
+{% endschema %}

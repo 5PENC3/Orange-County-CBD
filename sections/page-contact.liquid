@@ -1,0 +1,145 @@
+{% assign bg = section.settings.background | img_url: "1024x" %}
+<div class="page-bg" {% if bg != blank %} style="background-image: url('{{ bg }}')" {% endif %}>
+
+    {% include 'breadcrumbs-container' %}
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="mx-auto col-12 col-lg-9 col-xxl-7">
+                <div class="row">
+                    <div class="mb-4 mb-xl-5 col-12 col-xl-7 col-xxl-7 pr-xl-0">
+                        <div class="panel px-xl-5">
+                            <div class="px-md-5 py-md-3">
+                                <h1 class="contact__title">{{ page.title }}</h1>
+                                {% form 'contact' %}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            {% if form.posted_successfully? %}
+                                                <p class="form-success">
+                                                    {{ 'contact.form.post_success' | t }}
+                                                </p>
+                                            {% endif %}
+                                            {{ form.errors | default_errors }}
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <label class="sr-only" for="ContactFormName">{{ 'contact.form.name' | t }}</label>
+                                            <input type="text" name="contact[name]" id="ContactFormName" placeholder="{{ 'contact.form.name' | t }}" value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <label class="sr-only" for="ContactFormEmail">{{ 'contact.form.email' | t }}</label>
+                                            <input type="email" name="contact[email]" id="ContactFormEmail" placeholder="{{ 'contact.form.email' | t }}" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" spellcheck="false" autocomplete="off" autocapitalize="off">
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <label class="sr-only" for="ContactFormPhone">{{ 'contact.form.phone' | t }}</label>
+                                            <input type="tel" name="contact[phone]" id="ContactFormPhone" placeholder="{{ 'contact.form.phone' | t }}" value="{% if form[phone] %}{{ form[phone] }}{% elsif customer %}{{ customer.phone }}{% endif %}" pattern="[0-9\-]*">
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <label class="sr-only" for="ContactFormEnquiryType">{{ 'contact.form.enquriy-type' | t }}</label>
+                                            <select id="ContactFormEnquiryType" name="contact[Enquiry-Type]">
+                                                {% for block in section.blocks %}
+                                                    {% case block.type %}
+                                                        {% when 'enquiry-option' %}
+                                                            <option value="{{block.settings.enquiry-option}}">{{block.settings.enquiry-option}}</option>
+                                                    {% endcase %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <label class="sr-only" for="ContactFormMessage">{{ 'contact.form.message' | t }}</label>
+                                            <textarea rows="5" name="contact[body]" id="ContactFormMessage" placeholder="{{ 'contact.form.message' | t }}">
+                                                {%- comment -%}
+                                                    {% if form.body %}
+                                                        {{ form.body }}
+                                                    {% endif %}
+                                                {%- endcomment -%}
+                                            </textarea>
+                                        </div>
+                                        <div class="mb-0 form-group col-12 button__holder">
+                                            <button class="btn btn-primary" type="submit">{{ 'contact.form.send' | t }}</button>
+                                        </div>
+                                    </div>
+                                {% endform %}
+                            </div>
+                        </div><!-- contact-form -->
+                    </div>
+                    <div class="col-12 col-xl-5 col-xxl-5">
+                        <div class="contact__sidebar row">
+                            {% if section.settings.contact_number != blank %}
+                                <div class="col-12 col-md-6 col-xl-12">
+                                    <div class="mb-4 mb-xl-3 text-center panel d-flex flex-column">
+                                        <div class="mb-2 text-primary">{% render 'icon-phone' %}</div>
+                                        <strong class="h6">{{ section.settings.contact_number }}</strong>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if section.settings.contact_email != blank %}
+                                <div class="col-12 col-md-6 col-xl-12">
+                                    <div class="mb-4 mb-xl-3 text-center panel d-flex flex-column">
+                                        <div class="mb-2 text-primary">{% render 'icon-email' %}</div>
+                                        <strong class="h6">{{ section.settings.contact_email }}</strong>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if section.settings.contact_address != blank %}
+                                <div class="col-12">
+                                    <div class="mb-4 mb-xl-3 text-center panel d-flex flex-column sidebar__address">
+                                        <div class="mb-2 text-primary">{% render 'icon-house' %}</div>
+                                        <div class="h6">{{ section.settings.contact_address }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Contact Us",
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "background",
+			"label": "Background Image"
+		},
+        {
+            "type": "header",
+            "content": "Contact information"
+        },
+        {
+            "type": "text",
+            "id": "contact_number",
+            "label": "Contact Number",
+            "default": "0151 640 0395"
+        },
+        {
+            "type": "text",
+            "id": "contact_email",
+            "label": "Contact Email",
+            "default": "info@orangecounty-cbd.com"
+        },
+        {
+            "type": "richtext",
+            "id": "contact_address",
+            "label": "Contact Address"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "enquiry-option",
+            "name": "Enquiry Type",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "enquiry-option",
+                    "label": "Enquiry Type Option",
+                    "info": "This will be added into the Enquiry Type dropdown"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

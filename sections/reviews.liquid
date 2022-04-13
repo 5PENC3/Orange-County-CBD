@@ -1,0 +1,188 @@
+{% if section.settings.show_section %}
+
+    <section class="reviews__section">
+
+        <div class="container-fluid reviews__container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    {% if section.settings.title != empty %}
+                        <h2 class="mt-0">{{section.settings.title}}</h2>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 review__extras">
+                    <!-- <div class="trustpilot-widget" data-locale="en-GB" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="60a280da09cef70001359cde" data-style-height="24px" data-style-width="100%" data-theme="light" data-min-review-count="10">
+                        <a href="https://uk.trustpilot.com/review/orangecounty-cbd.com" target="_blank" rel="noopener">Trustpilot</a>
+                    </div> -->
+
+                    <div class="custom d-flex">
+                        {%- if section.settings.custom_tp_image and section.settings.custom_tp_logo_image and section.settings.custom_tp_copy -%}
+                            <div class="holder logo__holder pb-1">
+                                {%- if section.settings.custom_tp_logo_image -%}
+                                    <img data-src="{{ section.settings.custom_tp_logo_image  | img_url: '100x' }}" width="100%" height="100%" class="img-fluid mx-auto lazyload" alt="TP Logo Image">
+                                {%- endif -%}
+                            </div>
+                            <div class="holder">
+                                {%- if section.settings.custom_tp_image -%}
+                                    <img data-src="{{ section.settings.custom_tp_image  | img_url: '120x' }}" width="100%" height="100%" class="img-fluid mx-auto lazyload" alt="TP Image">
+                                {%- endif -%}
+                            </div>
+                            <span class="pl-3 pr-2">{{ section.settings.custom_tp_copy }}</span>
+                        {%- endif -%}
+                    </div>
+
+                    {% if section.settings.all_reviews_url != blank and section.settings.all_reviews_text != blank %}
+                        <div class="read__all pl-lg-2 pt-1 pt-lg-0">
+                            <a target="_blank" rel="noreferrer" href="{{section.settings.all_reviews_url}}">{{section.settings.all_reviews_text}}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 d-block d-md-flex flex-wrap mt-4 review__cards justify-content-center review-cards-slick">
+                    {% for block in section.blocks %}
+
+                        {% include 'review-card' %}
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "Reviews",
+    "max_blocks": 4,
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Visibility"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "show_section",
+            "default":  true,
+            "label":    "Show this Section?"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Title"
+        },
+        {
+            "type":     "text",
+            "id":       "title",
+            "label":    "Title"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Image and Review Count"
+        },
+        {
+            "type": "image_picker",
+            "id": "custom_tp_logo_image",
+            "label": "Trustpilot Logo Image",
+            "info": "Optimal image size: 120 x 25"
+        },
+        {
+            "type": "image_picker",
+            "id": "custom_tp_image",
+            "label": "Trustpilot Image",
+            "info": "Optimal image size: 120 x 25"
+        },
+        {
+            "type":     "text",
+            "id":       "custom_tp_copy",
+            "label":    "Trustpilot Copy"
+        },
+        {
+            "type": 	"header",
+            "content": 	"All Reviews Info"
+        },
+        {
+            "type":     "url",
+            "id":       "all_reviews_url",
+            "label":    "All Reviews URL"
+        },
+        {
+            "type":     "text",
+            "id":       "all_reviews_text",
+            "label":    "All Reviews Text"
+        }
+    ],
+    "blocks": [
+		{
+			"type": "review-card",
+			"name": "Review Item",
+            "settings": [
+                {
+                    "type": 	"header",
+                    "content": 	"Stars"
+                },
+                {
+                    "type":      "select",
+                    "id":        "review_stars",
+                    "label":     "Review Stars",
+                    "options": [
+                        {
+                            "value": "Five",
+                            "label": "Five Stars"
+                        },
+                        {
+                            "value": "Four",
+                            "label": "Four Stars"
+                        },
+                        {
+                            "value": "Three",
+                            "label": "Three Stars"
+                        },
+                        {
+                            "value": "Two",
+                            "label": "Two Stars"
+                        },
+                        {
+                            "value": "One",
+                            "label": "One Star"
+                        }
+                    ],
+                    "default":   "Five"
+                },
+                {
+                    "type": 	"header",
+                    "content": 	"Content"
+                },
+                {
+                    "type":     "text",
+                    "id":       "review_title",
+                    "label":    "Title"
+                },
+                {
+                    "type":     "richtext",
+                    "id":       "review_copy",
+                    "label":    "Copy"
+                },
+                {
+                    "type":     "text",
+                    "id":       "review_author",
+                    "label":    "Author"
+                },
+                {
+                    "type":     "text",
+                    "id":       "review_date",
+                    "label":    "Date"
+                }
+            ]
+        }
+    ],
+	"presets": [
+    {
+      "name":       "Reviews",
+      "category":   "Reviews"
+    }
+  ]
+}
+{% endschema %}

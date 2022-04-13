@@ -1,0 +1,160 @@
+<div class="container-fluid mt-2 mt-lg-3 basket__container">
+	<div class="row">
+		<div class="col-12">
+			{% render 'breadcrumbs' %}
+		</div><!-- col -->
+	</div><!-- row -->
+
+	<div class="cart__holder">
+		
+		<form action="/cart" method="post">
+			<div class="row">
+				<div class="col-12 col-lg-7 col-xl-8 basket-main">
+					{%- if cart.item_count > 0 -%}
+
+					{%- for item in cart.items -%}
+
+					{%- assign current_variant = item.product.selected_or_first_available_variant -%}
+
+						<div class="basket-item" data-variant-id="{{item.variant.id}}" data-price="{{ item.price}}">
+							<div class="basket-item-image">
+								<a class="{{section.settings.ratio}}" href="{{ item.url | within: collections.all }}">
+									<img data-src="{{ item.image | img_url: '200x' }}" class="d-none d-lg-block img-fluid img-full mx-auto lazyload" alt="Cart Product Image">
+									<img data-src="{{ item.image | img_url: '450x' }}" class="d-block d-lg-none img-fluid img-full mx-auto lazyload" alt="Cart Product Image">
+								</a>
+							</div>
+							<div class="basket-item-details">
+								<h3 class="product-title"><a href="{{ item.url | within: collections.all }}">{{ item.product.title }}</a></h3>
+								<p class="product-variant">
+									{% unless item.product.has_only_default_variant %}
+										<span>{{item.variant.option1 }}
+											{% if item.variant.option2 %}
+											- {{item.variant.option2 }}
+											{% endif %}
+										</span>
+									{% endunless %}
+								</p>
+								<div class="prices d-flex align-items-center mb-3">
+									<div class="money original__price">{{ item.price | money }}</div>
+								</div>
+								<div class="basket-item-quantity d-flex align-items-center">
+									<div class="quantity__holder" data-variant-id="{{item.id}}">
+										<button class="minus" data-quantity="minus" data-field="quantity">
+											<div class="svg__holder d-flex align-items-center justify-content-center">
+												{% render 'icon-minus' %}
+											</div>
+										</button>
+										<input type="number" readOnly="readonly" class="cart-item-quantity" id="quantity" name="quantity" value="{{ item.quantity }}" min="1" max="200"/>
+										<button class="plus" data-quantity="plus" data-field="quantity">
+											<div class="svg__holder d-flex align-items-center justify-content-center">
+												{% render 'icon-plus' %}
+											</div>
+										</button>
+									</div>
+									<a class="basket-remove" aria-label="Remove {{ item.product.title }}" href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Remove</a>
+									<div class="basket-item-subtotal">
+										<div class="cart__item__subtotal">{{ item.price | money }}</div>  
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+					{%- endfor -%}
+
+					{%- else -%}
+						<p class="mt-lg-3 pl-3 pl-lg-0">The cart is empty. <a href="/collections/all">Continue shopping</a></p>
+					{%- endif -%}
+
+				</div><!-- basket-main -->
+
+				<div class="col-12 col-lg-5 col-xl-4 mt-5 mt-lg-0 basket-sidebar">
+					<div class="inner">
+
+						{% assign settings = section.settings %}
+
+						{% if settings.sidebar_title != empty %}
+							<h3 class="m-0">{{settings.sidebar_title}}</h3>
+						{% endif %}
+
+						<div class="sidebar__info">
+							<div class="d-flex align-items-center justify-content-between subtotal__div">
+								{% if settings.subtotal_label != empty %}
+									<p class="mb-0">{{settings.subtotal_label}}</p>
+								{% endif %}
+								<p class="mb-0" id="cart-subtotal">{{ cart.total_price | money }}</p>
+							</div>
+							<div class="d-flex align-items-center justify-content-between">
+								{% if settings.shipping_label != empty %}
+									<p class="mb-0">{{settings.shipping_label}}</p>
+								{% endif %}
+								{% if settings.shipping_info != empty %}
+									<p class="mb-0">{{settings.shipping_info}}</p>
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="basket-total d-flex align-items-center justify-content-between">
+							{% if settings.total_label != empty %}
+								<span>{{settings.total_label}}</span>
+							{% endif %}
+							<span class="basket-total-value"><span id="cart-total">{{ cart.total_price | money }}</span></span>
+						</div>
+
+						<div class="btn__holder">
+							<input class="btn btn-primary btn-100" type="submit" name="checkout" value="{{ 'cart.general.checkout_btn' | t }}">
+						</div>
+						<div class="btn__holder">
+                          <a class="btn btn-tertiary btn-100" href="/collections/all-products">Continue Shopping</a>
+						</div>
+						
+					</div><!-- basket-checkout -->
+				</div><!-- basket-sidebar -->
+			</div>
+		</form>
+
+	</div>
+
+</div><!-- container -->
+
+{% schema %}
+{
+  "name": "Basket",
+  "settings": [
+		{
+			"type": 	"header",
+			"content": 	"Sidebar"
+		},
+		{
+            "type": "text",
+            "id": "sidebar_title",
+            "default": "Your Basket Total",
+            "label": "Sidebar Title"
+        },
+		{
+            "type": "text",
+            "id": "subtotal_label",
+            "default": "Subtotal",
+            "label": "Subtotal Label"
+        },
+		{
+            "type": "text",
+            "id": "shipping_label",
+            "default": "Shipping",
+            "label": "Subtotal Label"
+        },
+		{
+            "type": "text",
+            "id": "shipping_info",
+            "default": "Calculated At Checkout",
+            "label": "Shipping Information"
+        },
+		{
+            "type": "text",
+            "id": "total_label",
+            "default": "Total",
+            "label": "Total Label"
+        }
+	]
+}
+{% endschema %}

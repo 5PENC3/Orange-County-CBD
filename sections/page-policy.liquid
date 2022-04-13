@@ -1,0 +1,40 @@
+{% assign policy_name = handle | replace: '-', '_' %}
+{% assign policy = shop[policy_name] %}
+
+{% include 'breadcrumbs-container' %}
+
+<div class="container">
+    <div class="mt-3 row mt-lg-5">
+        <div class="col-12 col-md-3">
+            <aside class="mt-3 sidebar-navigation mt-md-0">
+                {% if linklists.company-info != blank %}
+                    <div class="sidebar-content">
+                        <ul>
+                            {% for link in linklists.company-info.links %}
+                                {%- comment %}<locksmith:db9d>{% endcomment -%}
+                                  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists.company-info, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                {%- comment %}</locksmith:db9d>{% endcomment -%}
+                                <li class="{% if link.active %}active{% endif %}">
+                                    <a href="{{ link.url }}">{{ link.title }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div><!-- sidebar-content -->
+                {% endif %}
+            </aside><!-- sidebar-navigation -->
+        </div>
+        <div class="col-12 col-md-9">
+            <div class="row no-gutters">
+                <div class="pb-3 col-12 col-xl-8">
+                    <header>
+                        <h1 class="mt-0">{{ page_title }}</h1>
+                    </header>
+
+                    <div class="rte">
+                        {{ policy.body }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

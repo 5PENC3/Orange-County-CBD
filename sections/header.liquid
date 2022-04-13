@@ -1,0 +1,560 @@
+
+
+<header id="site-header">
+  {% comment %}
+  <div class="delivery-bar">
+      <p class="delivery-content">
+        Order Within The Next
+        {% assign days = 1 | times: 86400 %}
+        <span class="delivery-title">{{settings.delivery_title}}</span>
+        <span class="delivery-content">{{settings.delivery_content_before}} <span class="countdown-timer" data-hours="16" data-minutes="30">0 hours, 00 minutes</span></span>
+        for <span class="nl-mob">Next Day Delivery <i>(To Arrive {{ "now" | date: "%s" | plus: days | date: "%A, %d %B" }}</i>)</span>
+      </p>
+	</div>
+  {% endcomment %}
+	<div id="qikify-smartbar"></div>
+    <div class="container-fluid pl-4 pl-lg-5 pr-4 pr-lg-5">
+        <div class="row align-items-center py-2 pl-xl-5 pr-xl-5">
+            <div class="col-4 col-lg-5">
+                <div class="header-actions justify-content-start">
+                    <div class="header-mobile-menu d-lg-none">
+                        <span class="burger"></span>
+                    </div>
+                    <div class="site-navigation-container">
+                        {% include 'site-navigation' %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 col-lg-2 p-0">
+                {% include 'site-logo' %}
+            </div><!-- col -->
+            <div class="col-4 col-lg-5">
+                <div class="header-actions justify-content-end">
+
+                    <div class="header-search header-search-icon">
+                        {% render 'icon-search' %}
+                        {% render 'icon-close' %}
+
+						<div class="search-bar">
+							<div class="d-none d-lg-block top__arrow"></div>
+							{% render 'search', search_icon: 'false', search_button: 'true' %}
+						</div>
+                    </div>
+
+                    <div class="header-account d-none d-lg-block">
+                        {% include 'my-account-link' %}
+                    </div><!--header-account -->
+
+                    <div class="header-basket">
+                        <a>
+                            <span class="cart-icon {% if cart.item_count > 0%}items{%endif %}">
+                                {% render 'icon-cart' %}
+								<span class="cart-count {% if cart.item_count == 0 %}no-items{% endif %}{% if cart.item_count > 9%}wider{% endif %}">{{ cart.item_count }}</span>
+                            </span>
+                        </a>
+                        <div class="cart-mini-contents">
+							<div class="cart-mini-header d-flex align-items-center justify-content-center">
+								<h2 class="m-0">{{ 'cart.general.mini-cart-header' | t }}</h2>
+								{% render 'icon-close' %}
+							</div>
+
+                            <div class="cart-row">
+                                {% for item in cart.items %}
+                                    <div class="cart-item basket-item">
+                                        <div class="cart-item-left">
+                                            <div class="cart-prod-img">
+                                                {% if item.image != blank %}
+                                                    <a href="{{ item.url | within: collections.all }}">
+                                                        {{ item | img_url: '120x' | img_tag: item.title, 'img-fluid lazyload img-full' }}
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="cart-item-right">
+                                            <div class="cart-prod-name">
+                                                <a href="{{ item.url }}">{{ item.product.title }}</a>
+                                            </div>
+											<div class="cart-prod-variant">
+                                                {% unless item.product.has_only_default_variant %}
+													<span>{{item.variant.option1 }}
+														{% if item.variant.option2 %}
+														- {{item.variant.option2 }}
+														{% endif %}
+													</span>
+												{% endunless %}
+                                            </div>
+                                            <div class="cart-prod-price">
+                                                <span class="money">{{ item.price | money }}</span>
+                                            </div>
+                                          	{% comment %}
+                                            <div class="basket-item-quantity d-flex align-items-center">
+                                                <div class="quantity__holder" data-variant-id="{{item.id}}">
+                                                    <button class="minus" data-quantity="minus" data-field="quantity">
+                                                        <div class="svg__holder d-flex align-items-center justify-content-center">
+                                                            {% render 'icon-minus' %}
+                                                        </div>
+                                                    </button>
+                                                    <input type="number" readOnly="readonly" class="cart-item-quantity" id="quantity" name="quantity" value="{{ item.quantity }}" min="1" max="200"/>
+                                                    <button class="plus" data-quantity="plus" data-field="quantity">
+                                                        <div class="svg__holder d-flex align-items-center justify-content-center">
+                                                            {% render 'icon-plus' %}
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                                <a class="cart-prod-remove" data-variant-id="{{item.variant_id}}">Remove</a>
+                                            </div>
+                                          	{% endcomment %}
+											<div class="cart-prod-quantity">
+												<span>Quantity: </span><span class="quantity-value">{{ item.quantity}}</span>
+											</div>
+											<div class="cart-prod-remove" data-variant-id="{{item.variant_id}}">Remove</div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+							{% assign product = all_products[section.settings.product] %}
+							{% assign settings = section.settings %}
+
+							{% if product != empty %}
+								<div class="cart-mini-product">
+									{% assign current_variant = product.selected_or_first_available_variant %}
+									{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+
+									{% if settings.cart_mini_prod_heading != empty %}
+										<h5 class="mt-0 text-center">{{settings.cart_mini_prod_heading}}</h5>
+									{% endif %}
+								
+									<div class="product">
+										<a href="{{ product.url }}" class="image__holder">
+											<img data-src="{{ featured_image | img_url: '120x' }}" width="100%" height="100%" class="img-fluid mx-auto lazyload" alt="Mini Cart Product Image">
+										</a>
+										
+										<div class="details">
+
+											<a href="{{ product.url }}" class="title"><p class="mb-0">{{ product.title }}</p></a>
+
+											<div class="reviews">
+												<div class="product__reviews__snippet"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>
+											</div>
+
+											<div class="prices d-flex align-items-center">
+												<div class="money original__price">{{ current_variant.price | money }}</div>
+												{% if product.compare_at_price_max > product.price %}
+													<div class="money compare__price pl-2">{{ current_variant.compare_at_price | money }}</div>
+												{% endif %}
+											</div>
+
+											{% form 'product', product %}
+
+												<input type="hidden" name="id" value="{{ current_variant.id }}" />
+												<button type="submit" name="add" data-add-to-cart {% if current_variant.available %}{%else%}disabled{% endif %} class="btn-add-to-cart btn btn-primary btn-100 {% if current_variant.available %}variant-available{% else %}variant-not-available btn-disabled{% endif %}">
+													<span data-add-to-cart-text>
+														{% if current_variant.available %}
+															{{ 'products.product.add_to_cart' | t }}
+														{% else %}
+															{{ 'products.product.sold_out' | t }}
+														{% endif %}
+													</span>
+												</button>
+
+											{% endform %}
+
+										</div>
+
+									</div>
+								</div>
+							{% endif %}
+							
+                            <div class="cart-mini-actions">
+
+								<div class="info">
+									<div class="d-flex align-items-center justify-content-between pb-3 mb-1">
+										{% if settings.subtotal_label != empty %}
+											<p class="mb-0">{{settings.subtotal_label}}</p>
+										{% endif %}
+										<p class="mb-0" id="mini-cart-subtotal">{{ cart.total_price | money }}</p>
+									</div>
+									<div class="d-flex align-items-center justify-content-between">
+										{% if settings.shipping_label != empty %}
+											<p class="mb-0">{{settings.shipping_label}}</p>
+										{% endif %}
+										{% if settings.shipping_info != empty %}
+											<p class="mb-0">{{settings.shipping_info}}</p>
+										{% endif %}
+									</div>
+								</div>
+
+								{% if request.page_type != 'cart' %}
+									<div class="cart-mini-total d-flex align-items-center justify-content-between">
+										{% if settings.total_label != empty %}
+											<span>{{settings.total_label}}</span>
+										{% endif %}
+										<span class="cart-mini-total-value"><span id="cart-total">{{ cart.total_price | money }}</span></span>
+									</div>
+								{% endif %}
+								<div class="btn__holder">
+									{% if request.page_type != 'cart' %}
+                                	<a class="btn btn-tertiary btn-100 mb-3" href="/cart">{{ 'cart.general.edit_basket_btn' | t }}</a>
+									{% endif %}
+									<a class="btn btn-primary btn-100" href="/checkout">{{ 'cart.general.checkout_btn' | t }}</a>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- col -->
+        </div><!-- row -->
+    </div><!-- container-fluid -->
+	
+  	{% include 'sub-navigation' %}
+</header>
+
+{% schema %}
+{
+    "name": "Header",
+	"max_blocks": 20,
+	"settings":  [
+		{
+			"type": 	"header",
+			"content": 	"Mini Cart Options"
+		},
+		{
+			"type": 	"header",
+			"content": 	"Recommnded Product"
+		},
+		{
+			"type": "text",
+			"id": "cart_mini_prod_heading",
+			"default": "You May Also Like",
+			"label": "Heading"
+		},
+		{
+			"type": "product",
+			"id": "product",
+			"label": "Product",
+			"info": "This featured product will sit inside the mini cart"
+		},
+		{
+			"type": "text",
+			"id": "subtotal_label",
+			"default": "Subtotal",
+			"label": "Subtotal Label"
+		},
+		{
+			"type": "text",
+			"id": "shipping_label",
+			"default": "Shipping",
+			"label": "Subtotal Label"
+		},
+		{
+			"type": "text",
+			"id": "shipping_info",
+			"default": "Calculated At Checkout",
+			"label": "Shipping Information"
+		},
+		{
+			"type": "text",
+			"id": "total_label",
+			"default": "Total",
+			"label": "Total Label"
+		},
+		{
+			"type": 	"header",
+			"content": 	"Mobile Account Menu Item"
+		},
+		{
+			"type": "text",
+			"id": "account_nav_label",
+			"default": "Account",
+			"label": "Account Label"
+		}
+	],
+	"blocks": [
+  		{
+  			"type": "slide",
+  			"name": "Sub Navigation Item",
+  			"settings": [
+  		    	{
+  					"type": 	"header",
+  					"content": 	"Top Level Navigation"
+  				},
+  				{
+  				  	"type": 	"paragraph",
+  				  	"content": 	"The below options determine what is displayed on the top level navigation. When hovering on the below title the megamenu will appear."
+  				},
+  				{
+  				   "type":      "text",
+  				   "id":        "sub_first_level_title",
+  				   "label":     "Navigation Title",
+  				   "info": 		"Hovering on this Title will display the megamenu"
+  				},
+  				{
+  				   "type":      "url",
+  				   "id":        "sub_first_level_url",
+  				   "label":     "Navigation URL",
+  				   "info": 		"When clicking Navigation Title, where should it link too?"
+  				},
+  				{
+  					"type": "header",
+  					"content": "Sub Menu"
+  				},
+  				{
+  				  	"type": 	"paragraph",
+  				  	"content": 	"The Sub Menus will appear when the user hovers on the Navigation Title"
+  				},
+  				{
+  					"type":     "link_list",
+  			   		"id":       "sub_submenu",
+  			   		"label":    "Sub Menu One"
+  				},
+  				{
+  					"type": 	"header",
+  					"content": 	"Featured Link"
+  				},
+  				{
+  				  	"type": 	"paragraph",
+  				  	"content": 	"If enabled, the featured link can have a title,image, and CTA"
+  				},
+  				{
+  					"type": 	"checkbox",
+  					"id": 		"sub_featured_menu",
+  					"label": 	"Display CTA?",
+  					"default": 	true
+  				},
+  				{
+  				  	"type": 	"image_picker",
+  				  	"id": 		"sub_featured_menu_image",
+  				  	"label": 	"Navigation Menu Image",
+  				  	"info": 	"Optimal image size: 560px x 560px"
+  				},
+  				{
+  				   "type":      "url",
+  				   "id":        "sub_featured_menu_link",
+  				   "label":     "Image URL"
+  				}
+  			]
+
+  		},
+		{
+			"type": "nav",
+			"name": "Nav Item",
+			"settings": [
+		    	{
+					"type": 	"header",
+					"content": 	"Top Level Navigation"
+				},
+				{
+				  	"type": 	"paragraph",
+				  	"content": 	"The below options determine what is displayed on the top level navigation. When hovering on the below title the megamenu will appear."
+				},
+				{
+					"type": 	"paragraph",
+					"content": 	"The Account and Search options are added automatically on mobile"
+			  	},
+				{
+				   "type":      "text",
+				   "id":        "title",
+				   "label":     "Navigation Title",
+				   "info": 		"Hovering on this Title will display the megamenu"
+				},
+				{
+				   "type":      "url",
+				   "id":        "first_level_url",
+				   "label":     "Navigation URL",
+				   "info": 		"When clicking Navigation Title, where should it link too?"
+				},
+				{
+					"type": "header",
+					"content": "Sub Menus"
+				},
+				{
+				  	"type": 	"paragraph",
+				  	"content": 	"The Sub Menus will appear when the user hovers on the Navigation Title"
+				},
+				{
+					"type":     "link_list",
+			   		"id":       "submenu_one",
+			   		"label":    "Sub Menu One"
+				},
+				{
+					"type":     "checkbox",
+					"id": 		"show_submenu_one_title",
+					"label": 	"Show Sub Menu One Title?",
+					"default": 	true
+				},
+				{
+					"type":      "select",
+					"id":        "submenu_one_location",
+					"label":     "Sub Menu One Location",
+					"options": [
+						{
+							"value": "left",
+							"label": "Left"
+						},
+						{
+							"value": "right",
+							"label": "Right"
+						}
+					],
+					"default":   "left"
+				},
+				{
+					"type":     "link_list",
+			   		"id":       "submenu_two",
+			   		"label":    "Sub Menu Two"
+				},
+				{
+					"type":     "checkbox",
+					"id": 		"show_submenu_two_title",
+					"label": 	"Show Sub Menu Two Title?",
+					"default": 	true
+				},
+				{
+					"type":      "select",
+					"id":        "submenu_two_location",
+					"label":     "Sub Menu Two Location",
+					"options": [
+						{
+							"value": "left",
+							"label": "Left"
+						},
+						{
+							"value": "right",
+							"label": "Right"
+						}
+					],
+					"default":   "left"
+				},
+				{
+					"type":     "link_list",
+			   		"id":       "submenu_three",
+			   		"label":    "Sub Menu Three"
+				},
+				{
+					"type":     "checkbox",
+					"id": 		"show_submenu_three_title",
+					"label": 	"Show Sub Menu Three Title?",
+					"default": 	true
+				},
+				{
+					"type":      "select",
+					"id":        "submenu_three_location",
+					"label":     "Sub Menu Three Location",
+					"options": [
+						{
+							"value": "left",
+							"label": "Left"
+						},
+						{
+							"value": "right",
+							"label": "Right"
+						}
+					],
+					"default":   "left"
+				},
+				{
+					"type": "header",
+					"content": "Menu Tiles"
+				},
+				{
+					"type": 	"paragraph",
+					"content": 	"Options for the 2 Tiles on the menu. Image and Link are mandatory - the title and copy are optional"
+			  	},
+				{
+					"type": "header",
+					"content": "Tile One"
+				},
+				{
+					"type":     "checkbox",
+					"id": 		"show_tile_one",
+					"label": 	"Show Tile One?",
+					"default": 	false
+				},
+				{
+					"type": "image_picker",
+					"id": 	"tile_one_image",
+					"label": "Image"
+				},
+				{
+					"type":   "url",
+					"id":     "tile_one_link",
+					"label":  "Link"
+				},
+				{
+					"type":	  "text",
+					"id":     "tile_one_title",
+					"label":  "Title"
+				},
+				{
+					"type":      "select",
+					"id":        "title_one_colour",
+					"label":     "Title One Colour",
+					"options": [
+						{
+							"value": "white",
+							"label": "White"
+						},
+						{
+							"value": "black",
+							"label": "Black"
+						}
+					],
+					"default":   "white"
+				},
+				{
+					"type":	  "text",
+					"id":     "tile_one_copy",
+					"label":  "Link Text"
+				},
+				{
+					"type": "header",
+					"content": "Tile Two"
+				},
+				{
+					"type":     "checkbox",
+					"id": 		"show_tile_two",
+					"label": 	"Show Tile Two?",
+					"default": 	false
+				},
+				{
+					"type": "image_picker",
+					"id": 	"tile_two_image",
+					"label": "Image"
+				},
+				{
+					"type":	  "url",
+					"id":     "tile_two_link",
+					"label":  "Link"
+				},
+				{
+					"type":	  "text",
+					"id":     "tile_two_title",
+					"label":  "Title"
+				},
+				{
+					"type":      "select",
+					"id":        "title_two_colour",
+					"label":     "Title Two Colour",
+					"options": [
+						{
+							"value": "white",
+							"label": "White"
+						},
+						{
+							"value": "black",
+							"label": "Black"
+						}
+					],
+					"default":   "white"
+				},
+				{
+					"type":	  "text",
+					"id":     "tile_two_copy",
+					"label":  "Link Text"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

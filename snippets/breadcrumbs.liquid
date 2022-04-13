@@ -1,0 +1,38 @@
+<div class="breadcrumb">
+	{% unless template == 'index' or template == 'list-collections' %}
+		<nav aria-label="breadcrumbs">
+		{% render 'icon-home' %}
+		<a href="/" title="Home">Home</a>
+	{% if template contains 'page' %}
+		{% render 'icon-chevron-right' %}
+		<span>{{ page.title }}</span>
+	{% elsif template contains 'product' %}
+	{% if collection.url %}
+		{% render 'icon-chevron-right' %}
+		{{ collection.title | link_to: collection.url }}
+	{% endif %}
+		{% render 'icon-chevron-right' %}
+		<span>{{ product.title }}</span>
+	{% elsif template contains 'collection' and collection.handle %}
+		{% render 'icon-chevron-right' %}
+	{% if current_tags %}
+		{% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+		{{ collection.title | link_to: url }}
+		{% render 'icon-chevron-right' %}
+		<span>{{ current_tags | join: " + " }}</span>
+	{% else %}
+		<span>{{ collection.title }}</span>
+	{% endif %}
+	{% elsif template contains 'cart' %}
+		{% render 'icon-chevron-right' %}
+		<span>{{ 'cart.general.title' | t }}</span>
+	{% elsif template contains 'article' %}
+		{% render 'icon-chevron-right' %}
+		<span>{{ article.title }}</span>
+	{% else %}
+		{% render 'icon-chevron-right' %}
+		<span>{{ page_title }}</span>
+	{% endif %}
+		</nav>
+	{% endunless %}
+</div>

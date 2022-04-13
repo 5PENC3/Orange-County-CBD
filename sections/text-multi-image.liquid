@@ -1,0 +1,196 @@
+<section class="text__multi__image">
+
+    {% assign settings = section.settings %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-6 content">
+                <div class="titles">
+                    {% if settings.title_one != empty %}
+                        <h1 class="m-0" style="color: {{settings.title_one_color}}">{{settings.title_one}}</h1>
+                    {% endif %}
+                    {% if settings.title_two != empty %}
+                        <h1 class="m-0 second__h1" style="color: {{settings.title_two_color}}">{{settings.title_two}}</h1>
+                    {% endif %}
+                </div>
+                {% if settings.copy != empty %}
+                    <div class="copy pt-1">
+                        {{settings.copy}}
+                    </div>
+                {% endif %}
+                <div class="buttons pt-3">
+                    {% if settings.button_one and settings.button_one_link != empty and settings.button_one_link_text != empty %}
+                        <a href="{{ settings.button_one_link }}" class="btn btn-primary">{{ settings.button_one_link_text }}</a>
+                    {% endif %}
+
+                    {% if settings.button_two and settings.button_two_link != empty and settings.button_two_link_text != empty %}
+                        <a href="{{ settings.button_two_link }}" class="btn btn-primary ml-2 ml-lg-3">{{ settings.button_two_link_text }}</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 pt-lg-3 images">
+
+                {% if settings.large_image_url  %}<a href="{{settings.large_image_url}}">{% endif %}<img src="{{ settings.large_image | img_url: '600x' }}" width="100%" height="100%" class="d-none d-md-block img-fluid img-full" alt="Large Image Desktop">{% if settings.large_image_url  %}</a>{% endif %}
+                {% if settings.large_image_url  %}<a href="{{settings.large_image_url}}">{% endif %}<img src="{{ settings.large_image_mobile | img_url: '375x' }}" width="100%" height="100%" class="d-block d-md-none img-fluid img-full" alt="Large Image Mob">{% if settings.large_image_url  %}</a>{% endif %}
+
+                <div class="small__images pt-3">
+                    {% if settings.small_image_one_url  %}<a href="{{settings.small_image_one_url}}" class="d-none d-md-block img-fluid">{% endif %}<img data-src="{{ settings.small_image_one | img_url: '250x' }}" width="100%" height="100%" class="d-none d-md-block img-fluid lazyload" alt="Small Image One Desktop">{% if settings.small_image_one_url  %}</a>{% endif %}
+                    {% if settings.small_image_one_url  %}<a href="{{settings.small_image_one_url}}" class="d-block d-md-none img-fluid">{% endif %}<img data-src="{{ settings.small_image_one_mobile | img_url: '175x' }}" width="100%" height="100%" class="d-block d-md-none img-fluid lazyload" alt="Small Image One Mob">{% if settings.small_image_one_url  %}</a>{% endif %}
+
+                    {% if settings.small_image_two_url  %}<a href="{{settings.small_image_two_url}}" class="d-none d-md-block img-fluid">{% endif %}<img data-src="{{ settings.small_image_two | img_url: '250x' }}" width="100%" height="100%" class="d-none d-md-block img-fluid lazyload" alt="Small Image Two Desktop">{% if settings.small_image_two_url  %}</a>{% endif %}
+                    {% if settings.small_image_two_url  %}<a href="{{settings.small_image_two_url}}" class="d-block d-md-none img-fluid">{% endif %}<img data-src="{{ settings.small_image_two_mobile | img_url: '175x' }}" width="100%" height="100%" class="d-block d-md-none img-fluid lazyload" alt="Small Image Two Mob">{% if settings.small_image_two_url  %}</a>{% endif %}
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Text with Multiple Images",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Section Title(s)"
+        },
+        {
+            "type":     "text",
+            "id":       "title_one",
+            "label":    "Title Part One"
+        },
+        {
+            "type": "color",
+            "id": "title_one_color",
+            "label": "Title One Colour",
+            "default": "#322D26",
+            "info": "Default is #322D26"
+        },
+        {
+            "type":     "text",
+            "id":       "title_two",
+            "label":    "Title Part Two",
+            "info":     "Optional - can be used to have the 2nd part of your title a different colour"
+        },
+        {
+            "type": "color",
+            "id": "title_two_color",
+            "label": "Title Two Colour",
+            "default": "#322D26",
+            "info": "Default is #322D26"
+        },
+        {
+            "type":     "richtext",
+            "id":       "copy",
+            "label":    "Copy"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Buttons"
+        },
+        {
+            "type": "checkbox",
+            "id": "button_one",
+            "label": "Add Button One?",
+            "default": false
+        },
+        {
+            "type":      "url",
+            "id":        "button_one_link",
+            "label":     "Button One Link"
+        },
+        {
+           "type":      "text",
+           "id":        "button_one_link_text",
+           "label":     "Button One Text",
+           "default":   "Shop Now"
+        },
+        {
+            "type": "checkbox",
+            "id": "button_two",
+            "label": "Add Button Two?",
+            "default": false
+        },
+        {
+            "type":      "url",
+            "id":        "button_two_link",
+            "label":     "Button Two Link"
+        },
+        {
+           "type":      "text",
+           "id":        "button_two_link_text",
+           "label":     "Button Two Text",
+           "default":   "Shop Now"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Large Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "large_image",
+          "label": "Large Image - Desktop",
+          "info": "Optimal image size: 600 x 250"
+        },
+        {
+            "type": "image_picker",
+            "id": "large_image_mobile",
+            "label": "Large Image - Mobile",
+            "info": "Optimal image size: 375 x 160"
+        },
+        {
+            "type": "url",
+            "id": "large_image_url",
+            "label": "Large Image - URL"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Small Image One"
+        },
+        {
+            "type": "image_picker",
+            "id": "small_image_one",
+            "label": "Small Image One - Desktop",
+            "info": "Optimal image size: 300 x 250"
+        },
+        {
+            "type": "image_picker",
+            "id": "small_image_one_mobile",
+            "label": "Small Image One - Mobile",
+            "info": "Optimal image size: 175 x 130"
+        },
+        {
+            "type": "url",
+            "id": "small_image_one_url",
+            "label": "Small Image One - URL"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Small Image Two"
+        },
+        {
+            "type": "image_picker",
+            "id": "small_image_two",
+            "label": "Small Image Two - Desktop",
+            "info": "Optimal image size: 300 x 250"
+        },
+        {
+            "type": "image_picker",
+            "id": "small_image_two_mobile",
+            "label": "Small Image Two - Mobile",
+            "info": "Optimal image size: 175 x 130"
+        },
+        {
+            "type": "url",
+            "id": "small_image_two_url",
+            "label": "Small Image Two - URL"
+        }
+    ],
+	"presets": [
+    {
+      "name":       "Text with Multiple Images",
+      "category":   "Content"
+    }
+  ]
+}
+{% endschema %}

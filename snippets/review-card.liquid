@@ -1,0 +1,77 @@
+{% if template contains 'product' %}
+    {% assign settings = product.metafields.accentuate %} 
+{% else %}
+    {% assign settings = block.settings %}
+{% endif %}
+
+<div class="col-12 col-md-6 col-lg-3 review__card">
+
+    <div class="inner d-flex">
+
+        <div class="stars d-flex mb-3 {% if template contains 'product' %}{{settings.review_stars[forloop.index0]}}{%else%}{{settings.review_stars}}{% endif %}">
+            <div class="one">
+                {% render 'icon-star' %}
+            </div>
+            <div class="two">
+                {% render 'icon-star' %}
+            </div>
+            <div class="three">
+                {% render 'icon-star' %}
+            </div>
+            <div class="four">
+                {% render 'icon-star' %}
+            </div>
+            <div class="five">
+                {% render 'icon-star' %}
+            </div>
+        </div>
+
+        {% if settings.review_title != empty %}
+
+            {% if template contains 'product' %}
+                <h5 class="mt-0 mb-2 pb-1">{{settings.review_title[forloop.index0]}}</h5>
+            {% else %}
+                <h5 class="mt-0 mb-2 pb-1">{{settings.review_title}}</h5>
+            {% endif %}
+
+        {% endif %}
+
+        {% if settings.review_copy != empty %}
+
+            {% if template contains 'product' %}
+                <div class="copy">{{settings.review_copy[forloop.index0]}}</div>
+            {% else %}
+                <div class="copy">{{settings.review_copy}}</div>
+            {% endif %}
+
+        {% endif %}
+
+        <div class="bottom__triangle"></div>
+
+    </div>
+
+    <div class="outer">
+
+        {% if settings.review_author != empty %}
+
+            {% if template contains 'product' %}
+                <h6 class="mt-0 mb-1">{{settings.review_author[forloop.index0]}}</h6>
+            {% else %}
+                <h6 class="mt-0 mb-1">{{settings.review_author}}</h6>
+            {% endif %}
+
+        {% endif %}
+
+        {% if settings.review_date != empty %}
+
+            {% if template contains 'product' %}
+                <p class="mb-0">{{settings.review_date[forloop.index0]}}</p>
+            {% else %}
+                <p class="mb-0">{{settings.review_date}}</p>
+            {% endif %}
+            
+        {% endif %}
+
+    </div>
+
+</div>

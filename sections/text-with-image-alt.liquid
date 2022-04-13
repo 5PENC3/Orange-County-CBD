@@ -1,0 +1,81 @@
+<!-- MJ: Used for the PDP / PLP Text & Image sectons, ie unique ones populated using the Accentuate Custom Fields App -->
+
+<!-- MJ: If no custom field data for the current collection/product, the section won't be shown for the PLP/PDP the user is on -->
+{% if template contains 'collection' %}
+    {% assign metafieldsExist = collection.metafields.accentuate.heading %}
+{% elsif template contains 'product' %}
+    {% assign metafieldsExist = product.metafields.accentuate.heading %}
+{% endif %}
+
+{% if metafieldsExist %}
+    <section class="text__with__image">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    {% if section.settings.title != empty %}
+                    <div class="title alt__title d-flex align-items-center justify-content-center">
+                        <h2 class="m-0 main">{{section.settings.title}}</h2>
+
+                        <!-- MJ: If on the Collection page, the collection title is used. Otherwise if on the
+                        product page, product title is used -->
+                        {% if template contains 'collection' %}
+                            <h2 class="pl-1 mt-0 mb-0 info text-center">{{collection.title}}</h2>
+                        {% elsif template contains 'product' %}
+                            <h2 class="pl-1 mt-0 mb-0 info text-center">{{product.title}}<span>?</span></h2>
+                        {% endif %}
+                        
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+
+                <!-- MJ: If on the Collection page, collection metafield data is used. Otherwise if on the
+                product page, product metafield data is used -->
+                {% if template contains 'collection' %}
+                    {% for heading in collection.metafields.accentuate.heading %} 
+                        {% include 'text-with-image' %}
+                    {% endfor %} 
+                {% elsif template contains 'product' %}
+                    {% for heading in product.metafields.accentuate.heading %} 
+                        {% include 'text-with-image' %}
+                    {% endfor %} 
+                {%endif %}
+
+            </div>
+        </div>
+
+    </section>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Text With Image",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Info"
+        },
+        {
+            "type":     "paragraph",
+            "content":  "This section will only show if there are custom fields present. Please use Accentuate Custom Fields to populate these"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Title - Partial"
+        },
+        {
+            "type":     "text",
+            "id":       "title",
+            "label":    "Title",
+            "default":  "Why Choose Our",
+            "info":     "The Collection / Product Name will be added automatically. You can enter the part before it here"
+        },
+        {
+            "type":     "paragraph",
+            "content":  "The Text / Image content is populated via custom fields. Please use Accentuate Custom Fields for this"
+        }
+    ]
+}
+{% endschema %}

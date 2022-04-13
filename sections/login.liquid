@@ -1,0 +1,95 @@
+{% assign bg = section.settings.background | img_url: "1024x" %}
+<div class="page-bg" {% if bg != blank %} style="background-image: url('{{ bg }}')" {% endif %}>
+
+    {% include 'breadcrumbs-container' %}
+
+    <div class="container py-5 account__forms">
+        <div class="mx-auto row pb-5">
+            <div class="panel mx-auto">
+                <div class="px-md-5 py-md-3" id="CustomerLoginForm">
+                    <h2 class="h2 my-0 mb-4 text-center">Login</h2>
+                    <div class="row">
+                        <div class="col-12">
+                            {% form 'customer_login' %}
+                                {{ form.errors | default_errors }}
+                                <div class="form-group">
+                                    <label class="sr-only" for="CustomerEmail">
+                                        {{ 'customer.login.email' | t }}
+                                    </label>
+                                    <input type="email" name="customer[email]" id="CustomerEmail" class="{% if form.errors contains 'email' %}input-error{% endif %}" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Email Address" autofocus>
+                                </div>
+                                {% if form.password_needed %}
+                                    <div class="form-group">
+                                        <label class="sr-only" for="CustomerPassword">
+                                            {{ 'customer.login.password' | t }}
+                                        </label>
+                                        <input type="password" name="customer[password]" id="CustomerPassword" placeholder="Password" class="{% if form.errors contains 'password' %}input-error{% endif %}">
+                                    </div>
+                                {% endif %}
+                                <button class="btn btn-primary" type="submit">{{ 'customer.login.sign_in' | t }}</button>
+
+                                <div class="text-center d-flex mt-4 flex-column flex-md-row">
+                                    {% if form.password_needed %}
+                                        <a class="text-body-color mr-md-4 mb-4 mb-md-0" href="#recover" id="RecoverPassword">{{ 'customer.login.forgot_password' | t }}</a>
+                                    {% endif %}
+
+                                    <a class="text-body-color" href="/account/register">Create Account</a>
+                                </div>
+                            {% endform %}
+                        </div>
+                    </div>
+
+
+                </div><!-- CustomerLoginForm -->
+
+                <div class="px-md-5 py-md-3 hide" id="RecoverPasswordForm">
+                    <h3 class="my-0 mb-4">Reset Password</h3>
+                    {% comment %} <p class="text-center mb-0 pb-4">{{ 'customer.recover_password.instruction' | t }}</p> {% endcomment %}
+                    <div class="form-success hide" id="ResetSuccess">
+                        {{ 'customer.recover_password.success' | t }}
+                    </div>
+
+                    {% form 'recover_customer_password' %}
+                        {{ form.errors | default_errors }}
+
+                        {% if form.posted_successfully? %}
+                            <span class="hide reset-password-success"></span>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label class="sr-only" for="RecoverEmail">
+                                {{ 'customer.recover_password.email' | t }}
+                            </label>
+                            <input autocapitalize="off" autocomplete="off" id="RecoverEmail" name="email" placeholder="Email Address" spellcheck="false" type="email">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 text-center py-3">
+                                <button class="btn btn-primary btn-wide" type="submit">
+                                    {{ 'customer.recover_password.submit' | t }}
+                                </button>
+                            </div><!-- col -->
+                            <div class="col-12 text-center">
+                                <a class="text-body-color hide-forgot-password" href="#signin">{{ 'customer.recover_password.cancel' | t }}</a>
+                            </div><!-- col -->
+                        </div><!-- row -->
+
+                    {% endform %}
+                </div><!-- RecoverPasswordForm -->
+            </div><!-- panel -->
+        </div>
+    </div><!-- container -->
+</div>
+
+{% schema %}
+{
+    "name": "Customer Login",
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "background",
+			"label": "Background Image"
+		}
+    ]
+}
+{% endschema %}

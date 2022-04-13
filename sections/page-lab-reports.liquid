@@ -1,0 +1,130 @@
+{% include 'hero-large' %}
+
+<div class="container">
+    <div class="accordion-container">
+        {% for block in section.blocks %}
+            {% case block.type  %}
+                {% when 'lab_report' %}
+                    {% assign accordion_title = block.settings.lab_report_title %}
+                    {% capture accordion_description %}
+                        <embed src="{{ block.settings.lab_report_url }}" type="application/pdf" width="100%" height="1200px">
+                    {% endcapture %}
+                    {% include 'accordion' %}
+
+                {% when 'report_category' %}
+                    <h2 id="{{ block.id }}" class="h4 m-0 mb-3 {% unless forloop.first %} mt-4 {% endunless %}">{{ block.settings.report_category_title }}</h2>
+            {% endcase %}
+        {% endfor %}
+    </div><!-- accordion-container -->
+</div>
+
+{% schema %}
+{
+    "name": "Lab Reports",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content settings"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "select",
+            "id": "content_color",
+            "label": "Content Colour",
+            "options": [
+                {
+                    "value": "#ffffff",
+                    "label": "Light"
+                },
+                {
+                    "value": "#322d26",
+                    "label": "Dark"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "content_alignment",
+            "label": "Content Alignment",
+            "options": [
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Image settings"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image - Desktop",
+            "info": "Optimal image size: 1440 x 670"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_mob",
+            "label": "Image - Mobile",
+            "info": "Optimal image size: 414 x 554"
+        },
+        {
+            "type": "header",
+            "content": "Additional settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_breadcrumbs",
+            "label": "Show Breadcrumbs",
+            "default": true
+        }
+	],
+    "blocks": [
+		{
+			"type": "report_category",
+			"name": "Report Category",
+			"settings": [
+				{
+					"type": "text",
+					"id": "report_category_title",
+					"label": "Report Category Title"
+				}
+			]
+		},
+		{
+			"type": "lab_report",
+			"name": "Lab Report",
+			"settings": [
+				{
+					"type": "text",
+					"id": "lab_report_title",
+					"label": "Lab Report Title"
+				},
+				{
+					"type": "url",
+					"id": "lab_report_url",
+					"label": "Lab Report Url"
+				}
+			]
+		}
+    ]
+}
+{% endschema %}

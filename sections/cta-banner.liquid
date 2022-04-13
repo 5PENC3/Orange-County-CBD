@@ -1,0 +1,87 @@
+{% if section.settings.show_banner%}
+    <section class="cta__banner">
+        <div class="container-fluid p-0">
+            <div class="row row no-gutters">
+                <div class="col-12 holder">
+
+                    {% render 'cta-banner' %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+{% schema %}
+{
+    "name": "CTA Banner",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Visibility"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "show_banner",
+            "default":  true,
+            "label":    "Show this Section?"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Images"
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Widescreen Image",
+          "info": "Optimal image size: 1920 x 420"
+        },
+        {
+          "type": "image_picker",
+          "id": "mob_image",
+          "label": "Standard Image",
+          "info": "Optimal image size: 420 x 400"
+        },
+        {
+            "type": 	"header",
+            "content": 	"Content"
+        },
+        {
+            "type":     "text",
+            "id":       "title",
+            "label":    "Title"
+        },
+        {
+            "type":     "text",
+            "id":       "copy",
+            "label":    "Copy"
+        },
+        {
+            "type":      "url",
+            "id":        "banner_link",
+            "label":     "Button Link"
+        },
+        {
+            "type":     "text",
+            "id":       "banner_link_text",
+            "label":    "Button Text"
+        },
+        {
+            "type":     "text",
+            "id":       "klaviyo_code",
+            "label":    "Klaviyo HTML Code (Desktop)"
+        },
+        {
+            "type":     "text",
+            "id":       "klaviyo_code_mobile",
+            "label":    "Klaviyo HTML Code (Mobile)"
+        }
+    ],
+	"presets": [
+    {
+      "name":       "CTA Banner",
+      "category":   "Content"
+    }
+  ]
+}
+{% endschema %}

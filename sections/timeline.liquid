@@ -1,0 +1,76 @@
+{% if section.settings.show_section %}
+
+    <div class="container">
+        {% if section.settings.title != blank %}
+            <h3 class="text-center mb-5">{{ section.settings.title }}</h3>
+        {% endif %}
+
+
+        <div class="timeline-slick">
+            {% for block in section.blocks %}
+
+                <article class="timeline-event">
+                    {% if block.settings.event_date != blank %}
+                        <time class="timeline-event__date">{{ block.settings.event_date }}</time>
+                    {% endif %}
+                    <div class="timeline-event__inner">
+                        <header class="d-flex">
+                            <h4 class="timeline-event__title">{{ block.settings.event_title }}</h4>
+                        </header>
+                        <p class="timeline-event__content">{{ block.settings.event_content }}</p>
+                    </div>
+                </article>
+
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "Timeline",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Visibility"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "show_section",
+            "default":  true,
+            "label":    "Show this Section?"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Our History & Timeline"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "timeline_event",
+            "name": "Timeline Event",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "event_date",
+                    "label": "Event Date"
+                },
+                {
+                    "type": "text",
+                    "id": "event_title",
+                    "label": "Title"
+                },
+                {
+                    "type": "textarea",
+                    "id": "event_content",
+                    "label": "Content"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

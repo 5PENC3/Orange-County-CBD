@@ -1,0 +1,58 @@
+<section class="featured__blogs">
+    <div class="container-fluid p-lg-0">
+        {% if section.settings.title != empty %}
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="text-center mt-0">{{ section.settings.title }}</h2>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-12">
+                {% render 'featured-blogs' %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Featured Blogs",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Section Title"
+        },
+        {
+            "type":     "text",
+            "id":       "title",
+            "label":    "Title"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_latest",
+          "label": "Just Show Latest Posts?",
+          "default": false
+        }
+    ],
+    "blocks": [
+        {
+            "type": "article",
+            "name": "Blog Post",
+            "settings": [
+                {
+                   "type": "article",
+                   "id": "article",
+                   "label": "Please select an Article"
+                }
+            ]
+        }
+    ],
+	"presets": [
+    {
+      "name":       "Featured Blogs",
+      "category":   "Blog"
+    }
+  ]
+}
+{% endschema %}

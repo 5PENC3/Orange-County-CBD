@@ -1,0 +1,6 @@
+{% if customer %}
+    {% assign accountUrl = "/account" %}
+{% else %}
+    {% assign accountUrl = "/account/login" %}
+{% endif %}
+<a href="{{ accountUrl }}">{% render 'icon-account' %}</a>

@@ -1,0 +1,240 @@
+<nav id="site-navigation">
+    <ul class="top-level">
+
+        {% for block in section.blocks %}
+            <li class="menu-item-{{ block.settings.title | handle }} {% if block.settings.submenu_one != blank or block.settings.submenu_two != blank or block.settings.submenu_three != blank %}has-child {% endif %}">
+                <a class="top__level__link" href="{{ block.settings.first_level_url }}">{{ block.settings.title }}{% if block.settings.submenu_one != blank or block.settings.submenu_two != blank or block.settings.submenu_three != blank %}<div class="plus-minus-icon"></div>{% endif %}</a>
+                
+                {% if block.settings.submenu_one != blank or block.settings.submenu_two != blank or block.settings.submenu_three != blank or block.settings.submenu_four != blank %}
+                
+                <div class="sub-menu-container {% if block.settings.submenu_two != blank or block.settings.submenu_three != blank or block.settings.submenu_four != blank %}has-cols{% endif %}">
+                    <div class="d-none d-lg-block top__arrow"></div>
+                    <div class="container-fluid p-0">
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col-12">
+                                  <div class="col-dirs">
+                                    <div class="left-col">
+
+                                          {% if block.settings.submenu_one != blank and block.settings.submenu_one_location == "left" %}
+                                              <div class="sub-menu">
+                                                  {% if block.settings.show_submenu_one_title %}
+                                                      <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_one].title }}</h6>
+                                                  {% endif %}
+                                                  <ul>
+                                                      {% for link in linklists[block.settings.submenu_one].links %}
+                                                          {%- comment %}<locksmith:6bbe>{% endcomment -%}
+                                                            {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_one], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                          {%- comment %}</locksmith:6bbe>{% endcomment -%}
+                                                          <li  {% if link.links != blank %} class="has-subs"{% endif %}>
+                                                            <a href="{{ link.url }}" {%- if link.links != blank -%}class="sub-menu-menu-title"{% endif %}>{{ link.title }}{%- if link.links != blank -%}<div class="plus-minus-icon"></div>{% endif %}</a>
+        													{%- if link.links != blank -%}
+                                                          
+                                                              <ul class="sub-menu-menu">
+                                                                {%- for child_link in link.links -%}
+                                                                  {%- comment %}<locksmith:71b2>{% endcomment -%}
+                                                                    {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: child_link, subject_parent: link, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                                  {%- comment %}</locksmith:71b2>{% endcomment -%}
+                                                                  <li>
+                                                                    <a href="{{ child_link.url }}" {% if child_link.active %}aria-current="page"{% endif %}>
+                                                                      {{ child_link.title }}
+                                                                    </a>
+                                                                </li>
+                                                                {% endfor %}
+                                                              </ul>
+                                                          	{% endif %}
+														</li>
+                                                      {% endfor %}
+                                                  </ul>
+                                              </div>
+                                          {% endif %}
+                                          {% if block.settings.submenu_two != blank and block.settings.submenu_two_location == "left" %}
+                                              <div class="sub-menu">
+                                                  {% if block.settings.show_submenu_two_title %}
+                                                      <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_two].title }}</h6>
+                                                  {% endif %}
+                                                  <ul>
+                                                      {% for link in linklists[block.settings.submenu_two].links %}
+                                                          {%- comment %}<locksmith:58ef>{% endcomment -%}
+                                                            {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_two], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                          {%- comment %}</locksmith:58ef>{% endcomment -%}
+                                                          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                                      {% endfor %}
+                                                  </ul>
+                                              </div>
+                                          {% endif %}
+
+                                          {% if block.settings.submenu_three != blank and block.settings.submenu_three_location == "left" %}
+                                              <div class="sub-menu">
+                                                  {% if block.settings.show_submenu_three_title %}
+                                                      <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_three].title }}</h6>
+                                                  {% endif %}
+                                                  <ul>
+                                                      {% for link in linklists[block.settings.submenu_three].links %}
+                                                          {%- comment %}<locksmith:36e9>{% endcomment -%}
+                                                            {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_three], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                          {%- comment %}</locksmith:36e9>{% endcomment -%}
+                                                          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                                      {% endfor %}
+                                                  </ul>
+                                              </div>
+                                          {% endif %}
+
+                                    </div>
+                                  
+                                    <div class="right-col">
+
+                                          {% if block.settings.submenu_one != blank and block.settings.submenu_one_location == "right" %}
+                                              <div class="sub-menu">
+                                                  {% if block.settings.show_submenu_one_title %}
+                                                      <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_one].title }}</h6>
+                                                  {% endif %}
+                                                  <ul>
+                                                      {% for link in linklists[block.settings.submenu_one].links %}
+                                                          {%- comment %}<locksmith:ed88>{% endcomment -%}
+                                                            {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_one], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                          {%- comment %}</locksmith:ed88>{% endcomment -%}
+                                                          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                                      {% endfor %}
+                                                  </ul>
+                                              </div>
+                                          {% endif %}
+                                          {% if block.settings.submenu_two != blank and block.settings.submenu_two_location == "right" %}
+                                              <div class="sub-menu">
+                                                  {% if block.settings.show_submenu_two_title %}
+                                                      <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_two].title }}</h6>
+                                                  {% endif %}
+                                                  <ul>
+                                                      {% for link in linklists[block.settings.submenu_two].links %}
+                                                          {%- comment %}<locksmith:7d69>{% endcomment -%}
+                                                            {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_two], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                          {%- comment %}</locksmith:7d69>{% endcomment -%}
+                                                          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                                      {% endfor %}
+                                                  </ul>
+                                              </div>
+                                          {% endif %}
+
+                                          {% if block.settings.submenu_three != blank and block.settings.submenu_three_location == "right" %}
+                                              <div class="sub-menu">
+                                                  {% if block.settings.show_submenu_three_title %}
+                                                      <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_three].title }}</h6>
+                                                  {% endif %}
+                                                  <ul>
+                                                      {% for link in linklists[block.settings.submenu_three].links %}
+                                                          {%- comment %}<locksmith:3ab6>{% endcomment -%}
+                                                            {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_three], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                          {%- comment %}</locksmith:3ab6>{% endcomment -%}
+                                                          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                                      {% endfor %}
+                                                  </ul>
+                                              </div>
+                                          {% endif %}
+
+                                    </div>
+                                  </div>
+                                  
+                                    <div class="sub-menu-row {% if block.settings.submenu_two != blank or block.settings.submenu_three != blank %}mult{% endif %}">
+                                      
+                                      {% comment %}
+                                        {% if block.settings.submenu_one != blank %}
+                                            <div class="sub-menu">
+                                                {% if block.settings.show_submenu_one_title %}
+                                                    <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_one].title }}</h6>
+                                                {% endif %}
+                                                <ul>
+                                                    {% for link in linklists[block.settings.submenu_one].links %}
+                                                        {%- comment %}<locksmith:9232>{% endcomment -%}
+                                                          {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_one], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                        {%- comment %}</locksmith:9232>{% endcomment -%}
+                                                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                        {% if block.settings.submenu_two != blank %}
+                                            <div class="sub-menu">
+                                                {% if block.settings.show_submenu_two_title %}
+                                                    <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_two].title }}</h6>
+                                                {% endif %}
+                                                <ul>
+                                                    {% for link in linklists[block.settings.submenu_two].links %}
+                                                        {%- comment %}<locksmith:a3e4>{% endcomment -%}
+                                                          {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_two], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                        {%- comment %}</locksmith:a3e4>{% endcomment -%}
+                                                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                        {% if block.settings.submenu_three != blank %}
+                                            <div class="sub-menu">
+                                                {% if block.settings.show_submenu_three_title %}
+                                                    <h6 class="sub-menu-title">{{ linklists[block.settings.submenu_three].title }}</h6>
+                                                {% endif %}
+                                                <ul>
+                                                    {% for link in linklists[block.settings.submenu_three].links %}
+                                                        {%- comment %}<locksmith:7102>{% endcomment -%}
+                                                          {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.submenu_three], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                        {%- comment %}</locksmith:7102>{% endcomment -%}
+                                                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                      {% endcomment %}
+                                        {% if block.settings.show_tile_one or block.settings.show_tile_two %}
+                                            <div class="sub-menu-tiles d-flex flex-column justify-content-start">
+                                                {% if block.settings.show_tile_one %}
+                                                    {% if block.settings.tile_one_link != empty and block.settings.tile_one_image != empty %}
+                                                        <div class="tile">
+                                                            <a href="{{block.settings.tile_one_link}}" class="holder">
+                                                                <img class="img-fluid lazyload d-block d-md-none" src="{{ block.settings.tile_one_image | img_url: '315x100' }}" alt="Tile One Image">
+                                                                <img class="img-fluid lazyload d-none d-md-block" src="{{ block.settings.tile_one_image | img_url: '850x250' }}" alt="Tile One Image Tablet">
+                                                                {% if block.settings.tile_one_title != empty %}
+                                                                    <h5 class="m-0 {{block.settings.title_one_colour}}">{{block.settings.tile_one_title}}</h5>
+                                                                {% endif %}
+                                                                {% if block.settings.tile_one_copy != empty %}
+                                                                    <a class="btn btn-primary" href="{{block.settings.tile_one_link}}">{{block.settings.tile_one_copy}}</a>
+                                                                {% endif %}
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                                {% if block.settings.show_tile_two %}
+                                                    {% if block.settings.tile_two_link != empty and block.settings.tile_two_image != empty %}
+                                                        <div class="tile">
+                                                            <a href="{{block.settings.tile_two_link}}" class="holder">
+                                                                <img class="img-fluid lazyload d-block d-md-none" src="{{ block.settings.tile_two_image | img_url: '315x100' }}" alt="Tile Two Image">
+                                                                <img class="img-fluid lazyload d-none d-md-block" src="{{ block.settings.tile_two_image | img_url: '850x250' }}" alt="Tile Two Image Tablet">
+                                                                {% if block.settings.tile_two_title != empty %}
+                                                                    <h5 class="m-0 {{block.settings.title_two_colour}}">{{block.settings.tile_two_title}}</h5>
+                                                                {% endif %}
+                                                                {% if block.settings.tile_two_copy != empty %}
+                                                                    <a class="btn btn-primary" href="{{block.settings.tile_two_link}}">{{block.settings.tile_two_copy}}</a>
+                                                                {% endif %}
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div><!-- sub-menu-row -->
+                                </div><!-- col -->
+                            </div><!-- row -->
+                        </div><!-- col -->
+                    </div><!-- row -->
+                    </div><!-- container -->
+                </div><!-- sub-menu-container -->
+                {% endif %}
+            </li>
+        {% endfor %}
+
+        <li class="d-block d-lg-none">
+            {% if section.settings.account_nav_label%}
+                <a class="top__level__link" href="/account/login">{{section.settings.account_nav_label}}</a>
+            {% endif %}
+        </li>
+    </ul>
+</nav>

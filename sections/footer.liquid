@@ -1,0 +1,230 @@
+<footer>
+  	{% if template != 'index' and template != 'collection.cbd-isolate' %}
+	<div class="container-fluid footer__featured__on text-center">
+		<div class="row">
+			<div class="col-12">
+				{% if section.settings.footer_featured_heading != empty %}
+					<h4> {{section.settings.footer_featured_heading}} </h4>
+				{% endif %}
+				<div class="images footer-featured-slick pt-2">
+					{% for block in section.blocks %}
+						{% case block.type %}
+							{% when 'featured_on_logo' %}
+							<div class="holder">
+								<img class="img-fluid lazyload" width="100%" height="100%" src="{{ block.settings.image | img_url: 'master' }}" alt="Featured On Image">
+							</div>
+						{% endcase %}
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+  	{% endif %}
+	<div class="container-fluid footer__main">
+		<div class="row">
+			<div class="col-12 col-lg-5 col-xl-3 mx-auto footer__info">
+
+				{% include 'site-logo' %}
+
+				<div class="contact__info text-center">
+					{% if section.settings.footer_phone != empty %}
+						<a href="tel:{{section.settings.footer_phone}}">{{section.settings.footer_phone}}</a>
+					{% endif %}
+					{% if section.settings.footer_email != empty %}
+						<a href="mailto:{{section.settings.footer_email}}">{{section.settings.footer_email}}</a>
+					{% endif %}
+				</div>
+
+				<div class="footer-social">
+					{%- assign social_accounts = 'Instagram, Facebook, Twitter, Linkedin, Pinterest, YouTube, TikTok' | split: ', ' -%}
+
+					<ul>
+						{% for social in social_accounts %}
+						{%- assign social_handle = social | handleize -%}
+						{% capture social_link %}social_{{ social_handle }}_link{% endcapture %}
+						{% capture social_icon %}icon-{{ social_handle }}{% endcapture %}
+
+						{% if settings[social_link] != blank %}
+						<li>
+							<a href="{{ settings[social_link] }}" rel="noreferrer" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: social }}" target="_blank">
+								{% include social_icon %}
+								<span class="icon-fallback-text">{{ social }}</span>
+							</a>
+						</li>
+						{% endif %}
+
+					{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-xl-9 mx-auto d-flex flex-wrap footer__menus">
+
+			{% for block in section.blocks %}
+				
+				{% case block.type %}
+
+					{% when 'address' %}
+
+					<div class="footer-col col-6 col-lg">
+						<h5 class="footer-title">{{ block.settings.menu_heading | escape }}</h5>
+						{% if block.settings.address_info != empty %}
+							<div class="footer-content">
+								<p>{{block.settings.address_info}}</p>
+							</div>
+						{% endif %}
+					</div>
+				
+					{% when 'menu' %}
+
+					<div class="footer-col col-6 col-lg">
+						<h5 class="footer-title">{{ block.settings.menu_heading | escape }}</h5>
+						{%- assign footer_linklist = block.settings.menu -%}
+
+						{% if linklists[footer_linklist].links.size > 0 %}
+							<div class="footer-content">
+								<ul class="footer-links">
+									{% for link in linklists[footer_linklist].links %}
+										{%- comment %}<locksmith:1aa7>{% endcomment -%}
+										  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[footer_linklist], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+										{%- comment %}</locksmith:1aa7>{% endcomment -%}
+										<li><a href="{{ link.url }}">{{ link.title }}</a></li>
+									{% endfor %}
+								</ul>
+							</div>
+						{% endif %}
+					</div>
+
+				{% endcase %}
+				
+			{% endfor %}
+
+			</div>
+			<div class="col-12 col-xl-8 mx-auto d-block d-lg-flex justify-content-between pl-4 pr-4 footer__additional">
+				<div class="restriction__text">
+					{% if section.settings.restriction_header != empty %}
+						<h5 class="footer-title">{{ section.settings.restriction_header }}</h5>
+					{% endif %}
+					{% if section.settings.restriction_copy != empty %}
+						<p>{{section.settings.restriction_copy}}</p>
+					{% endif %}
+				</div>
+				<div class="logos">
+					<div class="row__one">
+                        <img class="img-fluid lazyload" src="{{ 'logo-klarna.png' | asset_url }}" alt="Klarna Logo">
+						<img class="img-fluid lazyload" src="{{ 'logo-cta.png' | asset_url }}" alt="CTA Logo">
+						<img class="img-fluid lazyload" src="{{ 'logo-phytovista.png' | asset_url }}" alt="PHY Logo">
+						<img class="img-fluid lazyload" src="{{ 'logo-trustpilot.png' | asset_url }}" alt="TP Logo">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row align-items-center footer__extras">
+			<div class="col-12 text-center encryption">
+				{% render 'icon-lock' %} PCI DSS & SSL Encryption Technology
+			</div>
+			<div class="col-12 text-center">
+				{% render 'payment-icons' %}
+			</div>
+			<div class="col-12 text-center copyright">
+				&copy; {{ 'now' | date: "%Y" }}, {{shop.name}}. All Rights Reserved
+			</div>
+		</div>
+	</div>
+</footer>
+
+
+{% schema %}
+  {
+    "name": "Footer",
+    "settings": [
+		{
+			"type": 	"header",
+			"content": 	"Featured On Area"
+		},
+		{
+			"type":	  "text",
+			"id":     "footer_featured_heading",
+			"label":  "Featured On Heading"
+		},
+		{
+			"type": 	"header",
+			"content": 	"Footer Info"
+		},
+		{
+			"type":		"text",
+			"id":     "footer_phone",
+			"label":  "Phone Number"
+		},
+		{
+			"type":		"text",
+			"id":     "footer_email",
+			"label":  "Phone Email"
+		},
+		{
+			"type": 	"header",
+			"content": 	"Footer Restriction Copy"
+		},
+		{
+			"type":		"text",
+			"id":     "restriction_header",
+			"label":  "Header"
+		},
+		{
+			"type": "richtext",
+			"id": "restriction_copy",
+			"label": "Copy"
+		}
+    ],
+    "blocks": [
+		{
+			"type": "featured_on_logo",
+			"name": "Featured On Logo",
+			"limit": 6,
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": 	"image",
+					"label": "Image"
+				}
+			]
+		},
+		{
+			"type": "menu",
+			"name": "Menu",
+			"limit": 3,
+			"settings": [
+				{
+					"type":		"text",
+					"id":     "menu_heading",
+					"label":  "Heading"
+				},
+				{
+					"type": 	"link_list",
+					"id": 		"menu",
+					"label": 	"Menu"
+				}
+			]
+		}, 
+		{
+			"type": "address",
+			"name": "Address",
+			"limit": 1,
+			"settings": [
+		     	{
+				   "type":      "text",
+				   "id":        "menu_heading",
+				   "label":     "Heading"
+				},
+				{
+                    "type": "richtext",
+					"id": "address_info",
+                    "label": "Address Info"
+                }
+			]
+		}
+	]
+  }
+
+{% endschema %}

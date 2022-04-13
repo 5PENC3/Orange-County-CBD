@@ -1,0 +1,61 @@
+<!-- {% if article.image != blank %}
+    <div class="article-hero pb-4 pb-lg-5 mb-lg-5">
+        
+
+        <picture>
+            <source media="(max-width: 800px)" srcset="{{ article.image.src | img_url: '1440x' }}">
+            <source media="(max-width: 1440px)" srcset="{{ article.image.src | img_url: '1920x' }}">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ article.image.src | img_url: '1920x' }}" class="lazyload" alt="{{ section.settings.widescreen_hero_image.alt }}">
+        </picture>
+    </div>
+{% endif %} -->
+
+{% include 'breadcrumbs-container' %}
+
+<div class="container mt-5">
+
+    <div class="row">
+
+        <article class="col-12 col-lg-8 order-1 order-md-2 article" id="article" itemscope itemtype="http://schema.org/Article" role="article">
+
+            <header>
+                <ul class="list-unstyled article__details mb-4">
+                    <li class="d-flex align-items-center">
+                        {% capture date %}
+                            {{ article.published_at | time_tag: format: 'day_month_year' }}
+                        {% endcapture %}
+                        {% capture dateDetailed %}
+                            {{ article.published_at | time_tag: format: "%Y-%m-%d %H:%M" }}
+                        {% endcapture %}
+                        {% include 'icon-calendar' %}
+                        <time datetime="{{dateDetailed}}">{{ date }}</time>
+                    </li>
+                    <li class="d-flex align-items-center">
+                        {% include 'icon-author' %}
+                        {{ article.author }}
+                    </li>
+                    <li class="d-flex align-items-center" id="readingtime">
+                        {% include 'icon-stopwatch' %}
+                        <span id="time"></span>
+                    </li>
+                </ul>
+
+                <h1>{{ article.title }}</h1>
+            </header>
+
+            <div class="rte" itemprop="articleBody">
+                {{ article.content }}
+            </div>
+
+            {% if settings.social_sharing_blog %}
+                <div class="article-sharing mt-5 mb-5">
+                    <h3 class="mb-4">Share With The World</h3>
+                    {% include 'social-sharing', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+                </div>
+            {% endif %}
+            
+        </article>
+    </div>
+</div>
+
+<div class="permalink" style="display:none;">{{article.slug}}</div>

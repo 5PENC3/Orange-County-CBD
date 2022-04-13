@@ -1,0 +1,550 @@
+<div class="container-fluid mt-2 mt-lg-3 product-detail-container">
+
+	<div class="row" data-section-id="{{ section.id }}" data-section-type="product" data-enable-history-state="true">
+
+		{%- assign current_variant = product.selected_or_first_available_variant -%}
+		{%- assign featured_image = current_variant.featured_image | default: product.featured_image -%}
+
+		<div class="d-none product-tags" data-tags="{{product.tags}}"></div>
+
+		{% assign settings = section.settings %}
+
+		<div class="col-12">
+			{% render 'breadcrumbs' %}
+		</div><!-- col -->
+		
+		<div id="product-images-container" class="col-12 col-lg-6 mt-3 mt-lg-5 p-lg-0">
+			<div id="product-large-images">
+			{% for image in product.images %}
+				<div class="large-image">
+					<div class="fixed-ratio square-crop">
+						<img class="img-fluid lazyload" src="{{ image | img_url: '500x' }}" alt="Prod Image">
+					</div>
+				</div>
+			{% endfor %}
+			</div><!-- product-large-images -->
+		
+			{% if product.images.size > 0 %}
+			<div id="product-thumbnails" class="{% if product.images.size > 5 %}slick{% else %}no-slick{% endif %} d-none d-lg-block">
+				{% for image in product.images %}
+					<div class="thumbnail-image">
+						<div class="product-image-thumbnail fixed-ratio square-crop">
+							<img class="img-fluid lazyload" src="{{ image | img_url: '100x' }}" alt="Prod Thumb Image">
+						</div>
+					</div>
+				{% endfor %}
+			</div><!-- product-thumbnails -->
+			{% endif %}
+		
+		  </div><!-- product-images-container -->
+
+		<div class="col-12 col-lg-6 col-xl-5 offset-xl-1 mt-4 mt-lg-5 main__pdp__content">
+          
+          {% comment %}
+          {% if collection.previous_product or collection.next_product %}
+          
+          <div class="prod-next-prev-links">
+            
+              
+                  <div class="prod-next-link prod-next-prev-link">
+                    {% if collection.previous_product %}<i class="fas fa-chevron-left"></i> {{ 'Previous product' | link_to: collection.previous_product.url, collection.previous_product.title }}{% endif %}
+                  </div>
+              
+                  <div class="prod-prev-link prod-next-prev-link">
+                      {% if collection.next_product %}{{ 'Next product' | link_to: collection.next_product.url, collection.next_product.title }} <i class="fas fa-chevron-right"></i>{% endif %}
+                  </div>
+            
+          </div>
+          {% endif %}
+          {% endcomment %}
+          
+				<h1>{{ product.title }}</h1>
+
+				<!-- MJ: Show Main prod price field if the option names isn't Pack - since if there are pack options, we'll be using the multi buy options -->
+				<div class="{% for option in product.options_with_values %}{% if option.name == 'Pack'%}d-none{%endif%}{% endfor %} money main__prod__price mt-3 mb-3" data-product-price>{{ current_variant.price | money }}</div>
+
+				{% assign shortDesc = product.metafields.accentuate.short_description %}
+
+				{% if shortDesc != empty %}
+					<p class="short__desc">{{shortDesc}}</p>
+				{% endif %}
+
+				{% form 'product', product %}
+
+          		{% assign swatches = product.metafields.accentuate.related_products | split: '|' %}
+				{% if swatches and swatches.size > 0 %}
+          			<div class="alternative-products">
+                      {% for swatch in swatches %}
+                      
+                      	{%- comment %}<locksmith:887c>{% endcomment -%}
+                      	  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: swatch, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                      	{%- comment %}</locksmith:887c>{% endcomment -%}
+                      
+                      	{% assign altprodtitle =  all_products[swatch].title  | split: '(' %}
+                      
+                        <p {% if product.handle == swatch %}class="active-product"{% endif %}><a href="{{ all_products[swatch].url }}">{% if all_products[swatch].metafields.accentuate.related_product_title %}{{all_products[swatch].metafields.accentuate.related_product_title}}{% else %}{{ altprodtitle[1] | remove: ')' }}{% endif %}</a></p>
+                      {% endfor %}
+          			</div>
+          		{% endif %}
+          
+          
+				<!-- MJ: If there are variants, show the option selectors and the multi buy area -->
+				{% unless product.has_only_default_variant %}
+					{% for option in product.options_with_values %}
+
+						<!-- MJ: Don't show the Strength Rating or Pack options, as they're only used for data purposes -->
+						{% unless option.name == 'Strength Rating' or option.name == 'Pack' %}
+
+							<div class="selector-wrapper variant-{{ option.name | downcase }}" data-variant-name="{{option.name | downcase}}">
+					
+							<label for="SingleOptionSelector-{{ forloop.index0 }}" class="sr-only">
+							{{ option.name }}
+							</label>
+		
+							<select
+							id="SingleOptionSelector-{{ forloop.index0 }}"
+							class="single-option-selector option__dropdown"
+							data-single-option-selector
+							data-index="option{{ option.position }}">
+							{% for value in option.values %}
+								<option
+								value="{{ value | escape }}"
+								{% if option.selected_value == value %}selected="selected"{% endif %}>
+									{{ option.name }}: {{ value }}
+								</option>
+							{% endfor %}
+							</select>
+		
+							</div>
+
+						{% endunless %}
+
+					{% endfor %}
+					<div class="selected-variant d-none" data-option-1="{{current_variant.option1}}"></div>
+
+					<!-- MJ: Only show the multi buy area if the variant options have Pack in them. Otherwise we just show -->
+					<!-- the usual price field -->
+					{% for option in product.options_with_values %}
+
+						{%- if option.name == 'Pack' -%}
+
+							<div class="pack__options d-flex flex-wrap justify-content-between">
+
+								{% for variant in product.variants %}
+
+									<div class="option d-none {% if variant.option2 contains 'Single' %}single{%endif%} {% if variant.option2 contains 'Twelve' and settings.twelve_buy_info != empty %}has__twelve__copy{%endif%} {% if variant.option2 == current_variant.option2 %}selected{%endif%}" data-value="{{variant.id}}" data-price="{{variant.price}}" data-strength="{{variant.option1}}" data-pack="{{variant.option2}}">
+										<div class="d-flex inner">
+											<div class="heading">
+												{{ variant.option2 }}
+											</div>
+											<div class="info d-flex justify-content-center text-center">
+                                              
+                                                {% if variant.compare_at_price > variant.price %}
+                                                  <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+                                                  <s data-compare-price class="was-price slash">
+                                                    {% if variant.compare_at_price > variant.price %}
+                                                      {{ variant.compare_at_price | money }}
+                                                    {% endif %}
+                                                  </s>
+                                                {% endif %}
+												<p class="mb-0 price">{{ variant.price | money}}</p>
+				
+												{% unless variant.option2 contains 'Single' %}
+			
+													<!-- MJ: If customer has the Wholesale App tags on them,  hide the discount messaging -->
+													{%- unless customer.tags contains 'Trade' or customer.tags contains 'DropShip' -%}
+
+													<p class="mb-0 d-none d-lg-block slash">/</p>
+														<div class="save d-flex">
+
+															<p class="mb-0 save__copy">
+																{% if settings.save_copy != empty %}
+																	{{settings.save_copy}}
+																{% else %}
+																	Save
+																{% endif %}
+															</p>
+						
+															<p class="mb-0 save__amount">
+																{% if variant.metafields.accentuate.saving_value %}
+																	<span class="custom">{{variant.metafields.accentuate.saving_value}}%</span>
+																{% else %}
+																	<span class="global">
+																		{% if variant.option2 contains 'Double' %}
+																			{% if settings.double_save_value %}
+																				{{settings.double_save_value}}%
+																			{% endif %}
+																		{% elsif variant.option2 contains 'Triple' %}
+																			{% if settings.triple_save_value %}
+																				{{settings.triple_save_value}}%
+																			{% endif %}
+																		{% else %}
+																			{% if settings.twelve_save_value %}
+																				{{settings.twelve_save_value}}%
+																			{% endif %}
+																		{% endif %}
+																	</span>
+																{% endif %}
+															</p>
+
+														</div>
+													{%- endunless -%}
+				
+												{% endunless %}
+				
+											</div>
+										</div>
+										
+										{% if variant.option2 contains 'Twelve' and settings.twelve_buy_info != empty %}
+											<div class="twelve__copy">{{settings.twelve_buy_info}}</div>
+										{% endif %}
+										
+									</div>
+
+								{% endfor %}
+
+							</div>
+
+						{% endif %}
+
+					{% endfor %}
+
+				{% endunless %}
+
+				<select name="id" class="no-js no-js-option-select" data-product-select>
+					{% for variant in product.variants %}
+					<option
+						{% if variant == current_variant %}selected="selected"{% endif %}
+						{% unless variant.available %}disabled="disabled"{% endunless %}
+						value="{{ variant.id }}">
+						{{ variant.title }}
+					</option>
+					{% endfor %}
+				</select>
+
+				{%- if settings.pack_discount_message != empty %}
+					<p class="mt-3 text-center pdp__info__message pack__discount__message d-none">{{settings.pack_discount_message}}</p>
+				{% endif %}
+
+				<input type="number" class="d-none main__prod__quantity" id="product-quantity" name="quantity" value="1" min="0"/>
+
+				<!-- MJ: Show the wholesale message only if its a product with pack options, if the message field isn't empty 
+				and the correct customer are applied -->
+				{% unless product.has_only_default_variant %}
+					{% for option in product.options_with_values %}
+
+						{% if option.name == 'Pack' %}
+
+							{%- if settings.wholesale_message != empty and customer.tags contains 'Trade' or customer.tags contains 'DropShip' -%}
+
+								<p class="mt-3 text-center pdp__info__message">{{settings.wholesale_message}}</p>
+
+							{%- endif -%}
+
+						{%- endif -%}
+					
+					{% endfor %}
+
+				{% endunless %}
+
+				<div class="product-add-to-basket">
+					<button type="submit" name="add" data-add-to-cart {% if current_variant.available %}{%else%}disabled{% endif %} class="btn-add-to-cart btn btn-primary btn-100 {% if current_variant.available %}variant-available{% else %}variant-not-available btn-disabled{% endif %}">
+						<span data-add-to-cart-text>
+						{% if current_variant.available %}
+							{{ 'products.product.add_to_cart' | t }}
+						{% else %}
+							{{ 'products.product.sold_out' | t }}
+						{% endif %}
+						</span>
+					</button>
+				</div><!-- product-add-to-basket -->
+
+				{% if product.available %}
+					{{ form | payment_button }}
+				{% endif %}	
+		
+				{% endform %}
+
+				{% if settings.show_delivery_timer %}
+					<div class="pdp__delivery__timer">
+						<div class="delivery-content">
+							{% assign days = 1 | times: 86400 %}
+							<span class="delivery-title">{{settings.delivery_title}}</span>
+							<span class="delivery-content">{{settings.delivery_content_before}} <span class="countdown-timer" data-hours="{{settings.hour_range}}" data-minutes="{% if settings.minute_range < 10%}0{%endif%}{{settings.minute_range}}">0 hours, 00 minutes</span> {{settings.delivery_content_after}}</span>
+							<span>{{ "now" | date: "%s" | plus: days | date: "%A, %d %B" }}</span>
+						</div>
+					</div>
+				{% endif %}	
+<!--
+				<div class="klarna__snippet">
+          			<script
+							async
+ 							src="https://eu-library.klarnaservices.com/lib.js"
+  							data-client-id="af57aacc-eecd-56a1-9e87-a6c540532e3b"
+>					</script>	
+          		</div>
+-->
+				{% unless product == empty %}
+				<script type="application/json" data-product-json>
+					{{ product | json }}
+				</script>
+				{% endunless %}
+
+		</div><!-- col -->
+	</div><!-- row -->
+
+	<div class="row mt-5">
+		<div class="col-12 col-lg-6 product__description">
+
+			{% if settings.prod_description_heading != empty %}
+				<h4 class="heading">{{settings.prod_description_heading}}</h4>
+			{% endif %}
+
+			<div class="description">
+				{{ product.description }}
+			</div>
+		</div>
+          
+      
+
+
+			{% assign infoHeading = product.metafields.accentuate.info_block_title %}
+			{% assign infoCopy = product.metafields.accentuate.info_block_copy %}
+      
+      
+
+      {% if infoHeading == blank and infoCopy == blank %}
+      
+        {% unless product.has_only_default_variant %}
+            {% for variant in product.variants %}
+      			{%- assign current_variant = product.selected_or_first_available_variant -%}
+                {% assign variantinfoHeading = variant.metafields.accentuate.info_block_title %}
+                {% assign variantinfoCopy = variant.metafields.accentuate.info_block_copy %}
+                {% if variantinfoHeading %}<div class="col-12 col-lg-6 col-xl-5 offset-xl-1 flex-wrap text-center justify-content-center info__boxes variant-box variant-{{ variant.id }}" data-variant-id="{{ variant.id }}"{% if current_variant.id == variant.id %} style="display: block;"{% endif %}>{% endif %}
+                {% for heading in variantinfoHeading %} 
+                    {% if variantinfoHeading != empty and variantinfoCopy != empty %}
+                        <div class="col-4 box">
+                            <div class="inner d-flex align-items-center justify-content-center">
+                                <h2 class="m-0">{{variantinfoHeading[forloop.index0]}}</h2>
+                                <p>{{variantinfoCopy[forloop.index0]}}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% if variantinfoHeading %}
+                    {% assign ingredients = variant.metafields.accentuate.ingredients_box %}
+                    {% if ingredients %}
+                        <div class="col-12 box">
+                            <div class="inner ingredients d-flex align-items-center justify-content-center">
+                                {{ingredients}}
+                            </div>
+                        </div>
+                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endunless %}
+      
+      {% else %}
+      
+          <div class="col-12 col-lg-6 col-xl-5 offset-xl-1 d-flex flex-wrap text-center justify-content-center info__boxes">
+
+
+			{% for heading in infoHeading %} 
+				{% if infoHeading != empty and infoCopy != empty %}
+					<div class="col-4 box">
+						<div class="inner d-flex align-items-center justify-content-center">
+							<h2 class="m-0">{{infoHeading[forloop.index0]}}</h2>
+							<p>{{infoCopy[forloop.index0]}}</p>
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+
+			{% assign ingredients = product.metafields.accentuate.ingredients_box %}
+
+			{% if ingredients %}
+				<div class="col-12 box">
+					<div class="inner ingredients d-flex align-items-center justify-content-center">
+						{{ingredients}}
+					</div>
+				</div>
+			{% endif %}
+			
+      		</div>
+      
+      {% endif %}
+          
+	</div>
+
+</div><!-- container -->
+
+{% if settings.show_related_products %}
+	{% render 'product-related-api' %}
+{% endif %}
+
+{% if settings.show_quick_buy_bar %}
+	{% render 'quick-buy-bar' %}
+{% endif %}
+
+  
+ 
+
+{% schema %}
+  {
+    "name": "Product Page",
+		"settings": [
+		{
+			"type": 	"header",
+			"content": 	"Wholesale Customer Message"
+		},
+		{
+            "type": "text",
+            "id": "wholesale_message",
+            "label": "Wholesale Message",
+            "info": "Set the text for the Wholesale customers here. This will show above the add to cart button if the customer is logged in, and tagged with 'Trade' or 'DropShip'"
+        },
+		{
+			"type": 	"header",
+			"content": 	"Pack Discount Message"
+		},
+		{
+            "type": "text",
+            "id": "pack_discount_message",
+            "label": "Discount Message",
+            "info": "Set the text for when the customser selects a Double, Triple or Twelve pack. Can be used to inform them further discounts will not apply"
+        },
+		{
+			"type": 	"header",
+			"content": 	"Purchase Options Box"
+		},
+		{
+			"type": 	"paragraph",
+			"content": 	"Set the additional information for the purchase options box here. The options themselves are populated using your product variants"
+        },
+		{
+            "type": "text",
+            "id": "save_copy",
+            "label": "Save Copy",
+			"default": "Save",
+            "info": "Used for the wording in front of the percentage value. If customer is logged in, and has Trade or Dropship tags, this won't be displayed"
+        },
+		{
+            "type": "text",
+            "id": "twelve_buy_info",
+            "label": "Twelve Buy Information",
+			"default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lacus urna. Donec ullamcorper ipsum mi, id volutpat ex faucibus a.",
+            "info": "Used for the information next to the 12 Buy Option."
+        },
+		{
+            "type": "number",
+            "id": "double_save_value",
+            "label": "Double Pack - Global Saving Value",
+			"default": 10,
+            "info": "Used for the saving value across all double pack options (No % symbol needed). Will only be used if there isn't a value for the 'Saving Value' custom field for the product variant"
+        },
+		{
+            "type": "number",
+            "id": "triple_save_value",
+            "label": "Triple Pack - Global Saving Value",
+			"default": 15,
+            "info": "Used for the saving value across all triple pack options (No % symbol needed). Will only be used if there isn't a value for the 'Saving Value' custom field for the product variant"
+        },
+		{
+            "type": "number",
+            "id": "twelve_save_value",
+            "label": "Twelve Pack - Global Saving Percentage",
+			"default": 20,
+            "info": "Used for the saving value across all twelve pack options (No % symbol needed). Will only be used if there isn't a value for the 'Saving Value' custom field for the product variant"
+        },
+		{
+			"type": 	"header",
+			"content": 	"Delivery Timer"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_delivery_timer",
+			"label": "Show Delivery Timer?",
+			"default": true
+		},
+		{
+            "type": "text",
+            "id": "delivery_title",
+            "default": "Delivery:",
+            "label": "Delivery Title",
+            "info": "Used for the Orange text and the start"
+        },
+        {
+			"type": 	"paragraph",
+			"content": 	"Set the daily delivery cut off point in a 24-hour format. "
+        },
+        {
+            "type":      "range",
+            "id":        "hour_range",
+            "min":        1,
+            "max":        24,
+            "step":       1,
+            "label":     "Hour",
+            "default":   16
+        },
+        {
+            "type":      "range",
+            "id":        "minute_range",
+            "min":        0,
+            "max":        59,
+            "step":       1,
+            "label":     "Minute",
+            "default":   0
+        },
+        {
+            "type": "text",
+            "id": "delivery_content_before",
+            "default": "Order within the next ",
+            "label": "Text before the countdown timer"
+        },
+        {
+            "type": "text",
+            "id": "delivery_content_after",
+            "default": " for Next Day Delivery",
+            "label": "Text after the countdown timer"
+        },
+		{
+			"type": 	"header",
+			"content": 	"Product Description Heading"
+		},
+		{
+            "type": "text",
+            "id": "prod_description_heading",
+            "default": "Product Description",
+            "label": "Product Description"
+        },
+		{
+			"type": 	"header",
+			"content": 	"Quick Buy Bar"
+		},
+		{
+            "type": "checkbox",
+            "id": "show_quick_buy_bar",
+            "label": "Show Quick Buy Bar?",
+			"default": true
+        },
+		{
+			"type": 	"header",
+			"content": 	"Related Products Options"
+		},
+		{
+            "type": "text",
+            "id": "related_products_title",
+            "default": "Related Products",
+            "label": "Related Products Title"
+        },
+		{
+			"type": "checkbox",
+			"id": "show_related_products",
+			"label": "Show related products?",
+			"info": "This is populated automatically using Shopify's built in functionality",
+			"default": true
+		}
+	]
+  }
+{% endschema %}

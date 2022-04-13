@@ -1,0 +1,107 @@
+{%- comment %}<locksmith:d60a>{% endcomment -%}
+  {%- include 'locksmith' -%}
+{%- comment %}</locksmith:d60a>{% endcomment -%}
+
+<!doctype html>
+<!--[if IE 9]> <html class="ie9 no-js supports-no-cookies" lang="{{ shop.locale }}"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html class="no-js supports-no-cookies {% if template == 'index' %} index {% endif %}" lang="{{ shop.locale }}">
+    <!--<![endif]-->
+    <head>
+                
+{% render 'orbislabs_sitemap_noindex' %}
+
+        <meta charset="utf-8">
+        <meta content="INDEX,FOLLOW" name="robots"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+        <link rel="canonical" href="{{ canonical_url }}">
+
+        <!-- Google Fonts -->{% comment %} <link href="https://fonts.googleapis.com/css?family=Prata" rel="stylesheet"> {% endcomment %}
+
+  <!-- Animate on Scroll Stylesheet. Initialised in javascript-tags-footer snippet -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+  {% if settings.favicon != blank %}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {% endif %}
+
+  {% capture seo_title %}
+    {{ page_title }}
+    {% if current_tags %}
+      {%- assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+    {% endif %}
+    {% if current_page != 1 %}
+      &ndash; {{ 'general.meta.page' | t: page: current_page }}
+    {% endif %}
+    {% unless page_title contains shop.name %}
+      &ndash; {{ shop.name }}
+    {% endunless %}
+  {% endcapture %}
+  <title>{{ seo_title }}</title>
+
+  {% if page_description %}
+    {%- comment %}<locksmith:08f4>{% endcomment -%}
+      {%- capture var %}{% render 'locksmith-variables', variable: 'transparent', hiding_scope: 'resource' %}{% endcapture %}{% if var == 'true' %}<meta name="description" content="{{ page_description | escape }}">{% endif -%}
+      {%- comment %}original: <meta name="description" content="{{ page_description | escape }}">{%- endcomment %}
+    {%- comment %}</locksmith:08f4>{% endcomment -%}
+  {% endif %}
+
+  {% include 'social-meta-tags' %}
+
+  {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
+
+  {% include 'javascript-tags-head' %}
+
+  {{ content_for_header }}
+  {% include 'qikify-apps' %}
+
+
+  {% include 'bc-sf-filter-style' %}
+
+  <!-- TrustBox script -->
+  <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+  <!-- End TrustBox script -->
+
+  {% if template contains 'blog' %}{{ 'https://cdn.shopify.com/s/files/1/0382/4185/files/ajaxinate.js?937' | script_tag }}{% endif %}
+
+  {% include 'globo.formbuilder.scripts' %}
+
+  
+  
+</head>
+
+<body id="{{ page_title | handle }}" class="template-{{ template.name | handle }}">
+
+  <div class="body-container">
+
+  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+  {% section 'header' %}
+
+  {% section 'header-text-features' %}
+
+  <main id="MainContent">
+    {% if request.path contains '/policies/' %}
+        {% section 'page-policy' %}
+    {% else %}
+        {{ content_for_layout }}{{ locksmith_content_for_layout_addenda }}
+    {% endif %}
+  </main>
+
+  <div class="nav-overlay"></div>
+
+  {% section 'footer' %}
+  
+  {% include 'bc-sf-filter' %}
+
+  {% include 'javascript-tags-footer' %}
+
+  {% include 'schema-json' %}
+
+<!--   <script>document.write("<script async type='text\/javascript' src='https://app.actionfeed.net/app/loader.js?v=Date.now()&shopify_domain=orange-countycbd.myshopify.com'><\/script>");</script> -->
+
+  </div><!-- body-container -->
+
+</body>
+</html>

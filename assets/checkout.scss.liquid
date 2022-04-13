@@ -1,0 +1,139 @@
+
+/* ==========================================================================
+#Prefix
+========================================================================== */
+
+/*
+  Prefix mixin for generating vendor prefixes.
+  Based on https://github.com/thoughtbot/bourbon/blob/v4-stable/app/assets/stylesheets/addons/_prefixer.scss
+
+  Usage:
+    // Input:
+    .element {
+      @include prefix(transform, scale(1), ms webkit spec);
+    }
+
+    // Output:
+    .element {
+      -ms-transform: scale(1);
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+*/
+@mixin prefix($property, $value, $prefixes) {
+	@each $prefix in $prefixes {
+		@if $prefix == webkit {
+			-webkit-#{$property}: $value;
+		} @else if $prefix == moz {
+			-moz-#{$property}: $value;
+		} @else if $prefix == ms {
+			-ms-#{$property}: $value;
+		} @else if $prefix == o {
+			-o-#{$property}: $value;
+		} @else if $prefix == spec {
+			#{$property}: $value;
+		} @else {
+			@warn 'Unrecognized prefix: #{$prefix}';
+		}
+	}
+}
+
+/* ==========================================================================
+#Media Query
+========================================================================== */
+
+@mixin media-query($media-query) {
+	$breakpoint-found: false;
+
+	@each $breakpoint in $breakpoints {
+		$name: nth($breakpoint, 1);
+		$declaration: nth($breakpoint, 2);
+
+		@if $media-query == $name and $declaration {
+			$breakpoint-found: true;
+
+			@media only screen and #{$declaration} {
+				@content;
+			}
+		}
+	}
+
+	@if $breakpoint-found == false {
+		@warn 'Breakpoint "#{$media-query}" does not exist';
+	}
+}
+
+/* ==========================================================================
+#Breakpoints
+========================================================================== */
+
+$screen-xs: 0;
+$screen-sm: 576px;
+$screen-md: 768px;
+$screen-lg: 992px;
+$screen-xl: 1200px;
+$screen-xxl: 1500px;
+
+$container-sm: 540px;
+$container-md: 720px;
+$container-lg: 960px;
+$container-xl: 1140px;
+$container-xxl: 1440px;
+
+$small: 'small';
+$small-down: 'small-down';
+$small-up: 'small-up';
+$medium: 'medium';
+$medium-down: 'medium-down';
+$medium-up: 'medium-up';
+$large: 'large';
+$large-down: 'large-down';
+$large-up: 'large-up';
+$widescreen: 'widescreen';
+$widescreen-down: 'widescreen-down';
+$widescreen-ultra: 'widescreen-ultra';
+
+// The `$breakpoints` list is used to build our media queries.
+// You can use these in the media-query mixin.
+$breakpoints: (
+	$small '(min-width: #{$screen-sm}) and (max-width: #{$screen-md - 1})',
+	$small-down '(max-width: #{$screen-sm - 1})',
+	$small-up '(min-width: #{$screen-sm})',
+	$medium '(min-width: #{$screen-md}) and (max-width: #{$screen-lg - 1})',
+	$medium-down '(max-width: #{$screen-md - 1})',
+	$medium-up '(min-width: #{$screen-md})',
+	$large '(min-width: #{$screen-lg}) and (max-width: #{$screen-xl - 1})',
+	$large-down '(max-width: #{$screen-lg - 1})',
+	$large-up '(min-width: #{$screen-lg})',
+	$widescreen '(min-width: #{$screen-xl})',
+	$widescreen-down '(max-width: #{$screen-xl})',
+	$widescreen-ultra '(min-width: #{$screen-xxl})'
+);
+
+.delivery-bar {
+  width: calc(100% - 50px);
+  text-align:center;
+  background:#ec983a;
+  padding:0 25px;
+  display:flex;
+  p {
+  	color:#FFF;
+    padding:10px 0;
+    margin:0;
+    width:100%;
+    @include media-query($medium-down) {
+      padding:8px 0;
+      font-size:13px;
+      line-height:16px;
+    }
+    span {
+      font-weight:bold;
+    }
+    .nl-mob {
+      @include media-query($medium-down) {
+        display:inline-block;
+        width:100%;
+      }
+    }
+  }
+}

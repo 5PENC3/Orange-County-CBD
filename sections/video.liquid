@@ -1,0 +1,47 @@
+<section class="video">
+    <div class="container pt-lg-5 pt-2 pb-lg-5 mt-lg-5 mt-0 mb-5">
+        {% include 'video-player' %}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Video",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "video_poster",
+            "label": "Video Poster"
+        },
+        {
+            "type":     "text",
+            "id":       "video_source",
+            "label":    "Video URL"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "video_loop",
+            "default":  true,
+            "label":    "Loop Video?"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "video_autoplay",
+            "default":  true,
+            "label":    "Autoplay video?"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "video_controls",
+            "default":  true,
+            "label":    "Show video controls?"
+        }
+    ],
+	"presets": [
+    {
+      "name":       "Video Player",
+      "category":   "Video"
+    }
+  ]
+}
+{% endschema %}

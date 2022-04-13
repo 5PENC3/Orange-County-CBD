@@ -1,0 +1,46 @@
+{% assign bg = section.settings.background | img_url: "1024x" %}
+<div class="page-bg" {% if bg != blank %} style="background-image: url('{{ bg }}')" {% endif %}>
+
+    {% include 'breadcrumbs-container' %}
+
+    <div class="container py-5">
+        <div class="mx-auto row pb-5">
+            <div class="panel mx-auto">
+                <div class="px-md-5 py-md-3">
+                    <h1 class="h2 my-0 mb-4 text-center">{{ 'customer.activate_account.title' | t }}</h1>
+                    <p class="text-center">{{ 'customer.activate_account.subtext' | t }}</p>
+                    {% form 'activate_customer_password' %}
+                        {{ form.errors | default_errors }}
+                        <div class="form-group">
+                            <label class="label-hidden" for="CustomerPassword">
+                                {{ 'customer.activate_account.password' | t }}
+                            </label>
+                            <input type="password" name="customer[password]" id="CustomerPassword" placeholder="{{ 'customer.activate_account.password' | t }}">
+                        </div>
+                        <div class="form-group">
+                            <label class="label-hidden" for="CustomerPasswordConfirmation">
+                                {{ 'customer.activate_account.password_confirm' | t }}
+                            </label>
+                            <input type="password" name="customer[password_confirmation]" id="CustomerPasswordConfirmation" placeholder="{{ 'customer.activate_account.password_confirm' | t }}">
+                        </div>
+                        <button class="mb-2 btn btn-primary" type="submit">{{ 'customer.activate_account.submit' | t }}</button>
+                        <button class="btn-text text-body-color" name="decline" type="submit">{{ 'customer.activate_account.cancel' | t }}</button>
+                    {% endform %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Activate Account",
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "background",
+			"label": "Background Image"
+		}
+    ]
+}
+{% endschema %}

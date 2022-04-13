@@ -1,0 +1,115 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-9 content text-center mx-auto">
+            <h1>{{ page.title }}</h1>
+        </div>
+    </div>
+    <div class="row no-gutters">
+        <div class="col-12 site__links__holder">
+            <div class="section">
+                {% if section.settings.second_title != blank %}
+                    <h4 class="site__map__title">{{section.settings.second_title}}</h4>
+                {% endif %}
+                <div class="site__links two">
+                    <ul>
+                        {% paginate collections.all.products by 5000 %}
+                        {% for product in collections.all.products %}
+                            {%- comment %}<locksmith:726b>{% endcomment -%}
+                              {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: product, subject_parent: collections.all, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                            {%- comment %}</locksmith:726b>{% endcomment -%}
+                            <li><a href="{{ product.url }}">{{ product.title }}</a></li>
+                        {% endfor %}
+                        {% assign dm_paginate_by = paginate.page_size %}{% endpaginate %}
+                    </ul>
+                </div>
+                {% if section.settings.collection_title != blank %}
+                    <h4 class="site__map__title">{{section.settings.collection_title}}</h4>
+                {% endif %}
+                <div class="site__links collections">
+                    <ul>
+                        {% for collection in collections %}
+                            {%- comment %}<locksmith:1b5c>{% endcomment -%}
+                              {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: collection, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                            {%- comment %}</locksmith:1b5c>{% endcomment -%}
+                            <li><a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: title }}">{{ collection.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="site__links one">
+                    {% if section.settings.first_title != blank %}
+                        <h4 class="site__map__title">{{section.settings.first_title}}</h4>
+                    {% endif %}
+                    {%- assign pagesNav = section.settings.all_pages_menu -%}
+                    {% if linklists[pagesNav].links.size > 0 %}
+                        <ul>
+                            {% for link in linklists[pagesNav].links %}
+                                {%- comment %}<locksmith:400e>{% endcomment -%}
+                                  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[pagesNav], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                {%- comment %}</locksmith:400e>{% endcomment -%}
+                                <li><a data-url="{{ link.url }}" data-title="{{ link.title }}" href="{{ link.url }}">{{ link.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="site__links four">
+                    {% if section.settings.fourth_title != blank %}
+                        <h4 class="site__map__title">{{section.settings.fourth_title}}</h4>
+                    {% endif %}
+                    {%- assign articlesNav = section.settings.all_articles_menu -%}
+                    {% if linklists[articlesNav].links.size > 0 %}
+                        <ul>
+                            {% for link in linklists[articlesNav].links %}
+                                {%- comment %}<locksmith:fae3>{% endcomment -%}
+                                  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[articlesNav], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                {%- comment %}</locksmith:fae3>{% endcomment -%}
+                                <li><a data-url="{{ link.url }}" data-title="{{ link.title }}" href="{{ link.url }}">{{ link.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if dm_paginate_by %}{% render 'spurit_dmr_collection_template_snippet', paginate_by: dm_paginate_by %}{% endif %}{% schema %}
+{
+  "name": "Sitemap",
+    "settings": [
+		{
+			"type": 	"paragraph",
+			"content": 	"First List is an all pages Menu, second is all products, third is all collections, fourth is all articles"
+	  	},
+		{
+			"type": 	"text",
+			"id": 		"first_title",
+			"label": 	"First List Title"
+        },
+        {
+            "type": 	"link_list",
+            "id": 		"all_pages_menu",
+            "label": 	"Select a Menu for the First List"
+        },
+        {
+			"type": 	"text",
+			"id": 		"second_title",
+			"label": 	"Second List Title"
+        },
+        {
+			"type": 	"text",
+			"id": 		"collection_title",
+			"label": 	"Collection List Title"
+		},
+        {
+			"type": 	"text",
+			"id": 		"fourth_title",
+			"label": 	"Fourth List Title"
+        },
+        {
+            "type": 	"link_list",
+            "id": 		"all_articles_menu",
+            "label": 	"Select a Menu for the Fourth List"
+        }
+    ]
+}
+{% endschema %}

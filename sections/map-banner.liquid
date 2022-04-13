@@ -1,0 +1,58 @@
+{% if section.settings.show_section %}
+
+    {% if section.settings.map_link %}
+        <a href="{{ section.settings.map_link }}">
+        {% endif %}
+        <picture>
+            <source media="(max-width: 767px)" srcset="{{ section.settings.portrait_map_image | img_url: '540x' }}">
+            <source media="(max-width: 800px)" srcset="{{ section.settings.widescreen_map_image | img_url: '1440x' }}">
+            <source media="(max-width: 1440px)" srcset="{{ section.settings.widescreen_map_image | img_url: '1920x' }}">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ section.settings.widescreen_map_image | img_url: '1920x' }}" class="lazyload" alt="{{ block.settings.widescreen_map_image.alt }}">
+        </picture>
+
+        {% if section.settings.map_link %}
+        </a>
+    {% endif %}
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "Map",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Visibility"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "show_section",
+            "default":  true,
+            "label":    "Show this Section?"
+        },
+        {
+            "type": "url",
+            "id": "map_link",
+            "label": "Map link"
+        },
+        {
+            "type": "header",
+            "content": " Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "widescreen_map_image",
+            "label": "Widescreen Image"
+        },
+        {
+            "type": "header",
+            "content": "Mobile Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "portrait_map_image",
+            "label": "Mobile Image"
+        }
+    ]
+}
+{% endschema %}

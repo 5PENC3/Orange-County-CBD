@@ -1,0 +1,43 @@
+{% assign bg = section.settings.background | img_url: "1024x" %}
+<div class="page-bg" {% if bg != blank %} style="background-image: url('{{ bg }}')" {% endif %}>
+
+    {% include 'breadcrumbs-container' %}
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="mx-auto col-12 col-md-8 col-lg-6">
+                <div class="p-5 text-center panel">
+                    <h1 class="mt-0 mb-2 text-body">{{ 'general.404.title' | t }}</h1>
+                    <p class="mb-4">{{ 'general.404.subtext_html' | t }}</p>
+                    {% if section.settings.cta_href != blank %}
+                        <a class="btn btn-primary" id="not__found__button" href="{{ section.settings.cta_href }}">{{ section.settings.cta_text }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "404",
+    "settings": [
+        {
+			"type": "image_picker",
+			"id": "background",
+			"label": "Background Image"
+		},
+        {
+            "type": "url",
+            "id": "cta_href",
+            "label": "Call To Action"
+        },
+        {
+            "type": "text",
+            "id": "cta_text",
+            "label": "Call To Action Text",
+            "default": "View All Products"
+        }
+    ]
+}
+{% endschema %}

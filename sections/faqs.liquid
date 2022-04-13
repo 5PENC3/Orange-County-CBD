@@ -1,0 +1,71 @@
+{% if section.settings.show_section %}
+
+    <div class="container">
+        {% if section.settings.title != blank %}
+            <h3 class="text-center mb-5">{{ section.settings.title }}</h3>
+        {% endif %}
+
+        <div class="row justify-content-center">
+            {% for block in section.blocks %}
+                <div class="col-12 col-md-6 col-lg-4 d-flex pl-2 pr-2">
+                    <article class="faq">
+                        <header class="d-flex">
+                            <div class="text-primary flex-shrink-0 mr-3">{% include 'icon-speech-bubble' %}</div>
+                            <h4 class="faq__question">{{ block.settings.question }}</h4>
+                        </header>
+                        <p class="faq__answer">{{ block.settings.answer }}</p>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "FAQs",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Visibility"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "show_section",
+            "default":  true,
+            "label":    "Show this Section?"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Frequently Asked Questions"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "faq",
+            "name": "Frequently Asked Question",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "question",
+                    "label": "Question"
+                },
+                {
+                    "type": "textarea",
+                    "id": "answer",
+                    "label": "Answer"
+                }
+            ]
+        }
+    ],
+	"presets": [
+    {
+      "name":       "FAQs",
+      "category":   "FAQs"
+    }
+  ]
+}
+{% endschema %}

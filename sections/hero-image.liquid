@@ -1,0 +1,41 @@
+<div class="flex-wrap hero-image d-flex align-items-center justify-content-center">
+    {% if section.settings.portrait_hero_image != blank or section.settings.widescreen_hero_image != blank %}
+        <picture class="hero-image__image about__hero">
+
+            <div class="col-12 pt-3 text-v-small d-block d-lg-none breadcrumb__holder">{% render 'breadcrumbs' %}</div>
+
+            <source media="(max-width: 767px)" srcset="{{ section.settings.portrait_hero_image | img_url: '540x' }}">
+            <source media="(max-width: 800px)" srcset="{{ section.settings.widescreen_hero_image | img_url: '1440x' }}">
+            <source media="(max-width: 1440px)" srcset="{{ section.settings.widescreen_hero_image | img_url: '1920x' }}">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ section.settings.widescreen_hero_image | img_url: '1920x' }}" class="lazyload" alt="{{ section.settings.widescreen_hero_image.alt }}">
+        </picture>
+    {% endif %}
+</div>
+
+
+{% schema %}
+{
+    "name": "Hero Image",
+    "settings": [
+        {
+            "type": "header",
+            "content": " Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "widescreen_hero_image",
+            "label": "Widescreen Image",
+            "info": "Right-aligned image"
+        },
+        {
+            "type": "header",
+            "content": "Mobile Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "portrait_hero_image",
+            "label": "Standard Image"
+        }
+    ]
+}
+{% endschema %}

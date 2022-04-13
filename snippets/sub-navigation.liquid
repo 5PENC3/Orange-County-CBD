@@ -1,0 +1,62 @@
+<div class="sub-nav-desktop">
+  <div class="sub-navigation-bg container-fluid pl-4 pl-lg-5 pr-4 pr-lg-5 mobile-hide">
+      <div class="row align-items-center py-2 pl-xl-5 pr-xl-5">
+      <nav id="sub-navigation" role="navigation">
+          <ul class="subnavul">
+          {% for block in section.blocks %}
+        {% case block.type %}
+              {% when 'slide' %}
+              <li class="menu-item-{{ block.settings.sub_first_level_title | handle }} {% if block.settings.sub_submenu != blank %}has-child {% endif %}">
+                <a href="{{ block.settings.sub_first_level_url }}" class="first-level-title">
+                    {{ block.settings.sub_first_level_title }}
+                  	{% if block.settings.sub_submenu != blank %}
+                      <span class="navmenu-icon navmenu-icon-depth-1" data-navmenu-trigger="">
+                        <svg aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6">
+                          <g fill="currentColor" fill-rule="evenodd">
+                            <polygon class="icon-chevron-down-left" points="4 5.371 7.668 1.606 6.665 .629 4 3.365"></polygon>
+                            <polygon class="icon-chevron-down-right" points="4 3.365 1.335 .629 1.335 .629 .332 1.606 4 5.371"></polygon>
+                          </g>
+                        </svg>
+                      </span>
+                  	{% endif %}
+                </a>
+
+                {% if block.settings.sub_submenu != blank %}
+                <div class="sub-menu-container">
+                  <div class="d-none d-lg-block top__arrow"></div>
+                  <div class="container">
+
+                    {% if block.settings.sub_featured_menu_image != blank %}
+                    <div class="sub-menu-image">
+                      {% if block.settings.sub_featured_menu_link != blank %}<a href="{{block.settings.sub_featured_menu_link}}">{% endif %}
+                      <img src="{{ block.settings.sub_featured_menu_image | img_url: '600x' }}" class="img-fluid" />
+                      {% if block.settings.sub_featured_menu_link != blank %}</a>{% endif %}
+                    </div>
+                    {% endif %}
+                    <div class="sub-menu-content">
+
+                      {% if block.settings.sub_submenu != blank %}
+                        <div class="sub-menu menu-one">
+                          <ul>
+                            {% for link in linklists[block.settings.sub_submenu].links %}
+                            {%- comment %}<locksmith:2776>{% endcomment -%}
+                              {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[block.settings.sub_submenu], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                            {%- comment %}</locksmith:2776>{% endcomment -%}
+                            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                    <a href="{{ block.settings.sub_first_level_url }}" class="btn btn-primary">Shop All {{ block.settings.sub_first_level_title }}</a>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+              </li>
+              {% endcase %}
+              {% endfor %}
+          </ul>
+      </nav>
+      </div><!-- container -->
+  </div><!-- site-navigation-bg -->
+</div>

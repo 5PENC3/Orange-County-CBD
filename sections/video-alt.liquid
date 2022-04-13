@@ -1,0 +1,52 @@
+<!-- MJ: Used for the PDP / PLP Video sectons, ie unique ones populated using the Accentuate Custom Fields App -->
+
+<!-- MJ: If no custom field data for the current collection/product, the section won't be shown for the PLP/PDP the user is on -->
+{% if template contains 'collection' %}
+    {% assign metafieldsExist = collection.metafields.accentuate.video_source%}
+{% elsif template contains 'product' %}
+    {% assign metafieldsExist = product.metafields.accentuate.video_source %}
+{% endif %}
+
+{% if metafieldsExist %}
+
+    <section class="video">
+        <div class="container pt-lg-5 pt-2 pb-lg-5 mt-lg-5 mt-0 mb-5">
+            {% include 'video-player' %}
+        </div>
+    </section>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "Video",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Info"
+        },
+        {
+            "type":     "paragraph",
+            "content":  "This section will only show if there are custom fields present for the video source and image poster. Please use Accentuate Custom Fields to populate these"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "video_loop",
+            "default":  true,
+            "label":    "Loop Video? (Applies across all Product/Collection videos)"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "video_autoplay",
+            "default":  true,
+            "label":    "Autoplay video? (Applies across all Product/Collection videos)"
+        },
+        {
+            "type":     "checkbox",
+            "id":       "video_controls",
+            "default":  true,
+            "label":    "Show video controls? (Applies across all Product/Collection videos)"
+        }
+    ]
+}
+{% endschema %}

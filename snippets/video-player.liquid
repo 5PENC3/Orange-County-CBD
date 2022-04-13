@@ -1,0 +1,67 @@
+<!-- MJ: If on Home, use the data from the section. Otherwise, use the block data. If using the below on a generic page, i.e. not product or collection specific, settings is set as from the blocks.
+Otherwise, if product or collection specific, it'll use info from the custom fields app. Depedning on the tenplate, it'll use 
+product or collection metafield data  -->
+{% if template contains 'index' or template contains 'page' %}
+    {% assign settings = section.settings %}
+{% elsif template contains 'collection' %}
+    {% assign settings = collection.metafields.accentuate %}
+{% elsif template contains 'product' %}
+    {% assign settings = product.metafields.accentuate %}  
+{% else %}
+    {% assign settings = block.settings %}
+{% endif %}
+
+<div class="video-player">
+
+    {% if settings.video_autoplay != true %}
+        <a class="video-player__button" href="#/">
+            <div class="sr-only">Play video</div>
+        </a>
+    {% endif %}
+
+    {% capture attributes %}
+
+    {% if template contains 'collection' or template contains 'product' %}
+        {% if settings.video_loop == 'true' %}
+            loop
+        {% endif %}
+        {% if settings.video_controls == 'true' %}
+            controls
+        {% endif %}
+        {% if settings.video_autoplay == 'true' %}
+            autoplay
+        {% endif %}
+    {% else %}
+        {% if settings.video_loop == true %}
+            loop
+        {% endif %}
+        {% if settings.video_controls == true %}
+            controls
+        {% endif %}
+        {% if settings.video_autoplay == true %}
+            autoplay
+        {% endif %}
+    {% endif %}
+
+        {% if template contains 'collection' or template contains 'product' %}
+            {% if settings.video_poster != blank %}
+                {% for image in settings.video_poster %}
+                    poster="{{image.src}}"
+                {% endfor %}
+            {% else %}
+                poster="https://cdn.shopify.com/s/files/1/0476/0620/2535/files/Pages-About_2x_0a0fecbc-6761-4543-86b1-c984dffb7ac1.png?v=1630935572"
+            {% endif %}
+        {% else %}
+            {% if settings.video_poster != blank %}
+                poster="{{ settings.video_poster | img_url: '1920x' }}"
+            {% else %}
+                poster="https://cdn.shopify.com/s/files/1/0476/0620/2535/files/Pages-About_2x_0a0fecbc-6761-4543-86b1-c984dffb7ac1.png?v=1630935572"
+            {% endif %}
+        {% endif %}
+        
+    {% endcapture %}
+
+    <video {{ attributes }} muted playsinline controlslist="nofullscreen nodownload">
+        <source src="{{ settings.video_source }}" type="video/mp4">
+    </video>
+</div>

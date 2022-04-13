@@ -1,0 +1,76 @@
+<!-- MJ: Used for the PDP / PLP FAQs, ie unique ones populated using the Accentuate Custom Fields App -->
+
+<!-- MJ: If no custom field data for the current collection/product, the section won't be shown for the PLP/PDP the user is on -->
+{% if template contains 'collection' %}
+    {% assign metafieldsExist = collection.metafields.accentuate.faq_question %}
+{% elsif template contains 'product' %}
+    {% assign metafieldsExist = product.metafields.accentuate.faq_question %}
+{% endif %}
+
+{% if metafieldsExist %}
+    <div class="container">
+        {% if section.settings.title != blank %}
+            <h3 class="text-center mb-5">{{ section.settings.title }}</h3>
+        {% endif %}
+
+        <div class="row justify-content-center">
+
+            {% if template contains 'collection' %}
+
+                {% for faq_question in collection.metafields.accentuate.faq_question %} 
+                    <div class="col-12 col-md-6 col-lg-4 d-flex pl-2 pr-2">
+                        <article class="faq">
+                            <header class="d-flex">
+                                <div class="text-primary flex-shrink-0 mr-3">{% include 'icon-speech-bubble' %}</div>
+                                <h4 class="faq__question">{{collection.metafields.accentuate.faq_question[forloop.index0]}}</h4>
+                            </header>
+                            <div class="faq__answer">{{collection.metafields.accentuate.faq_answer[forloop.index0]}}</div>
+                        </article>
+                    </div>
+                {% endfor %}
+
+            {% elsif template contains 'product' %}
+
+                {% for faq_question in product.metafields.accentuate.faq_question %} 
+                    <div class="col-12 col-md-6 col-lg-4 d-flex pl-2 pr-2">
+                        <article class="faq">
+                            <header class="d-flex">
+                                <div class="text-primary flex-shrink-0 mr-3">{% include 'icon-speech-bubble' %}</div>
+                                <h4 class="faq__question">{{product.metafields.accentuate.faq_question[forloop.index0]}}</h4>
+                            </header>
+                            <div class="faq__answer">{{product.metafields.accentuate.faq_answer[forloop.index0]}}</div>
+                        </article>
+                    </div>
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+    </div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "FAQs",
+    "settings": [
+        {
+            "type": 	"header",
+            "content": 	"Info"
+        },
+        {
+            "type":     "paragraph",
+            "content":  "This section will only show if there are custom fields present. Please use Accentuate Custom Fields to populate these"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Frequently Asked Questions"
+        },
+        {
+            "type":     "paragraph",
+            "content":  "The Question / Answer content is populated via custom fields. Please use Accentuate Custom Fields for this"
+        }
+    ]
+}
+{% endschema %}

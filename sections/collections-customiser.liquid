@@ -1,0 +1,203 @@
+{% paginate collection.products by 12 %}
+
+{% assign coll_metafields = collection.metafields.accentuate %}
+
+<div class="collection__handle" data-handle="{{collection.handle}}"></div>
+
+<div class="container-fluid collection__hero p-0 {% if coll_metafields.collection__desktop_image == blank or coll_metafields.collection__mobile_image == blank %}no__bg{% endif %}">
+
+    <div class="col-12 pl-lg-5 ml-lg-5 pt-2 text-v-small breadcrumb__holder">{% render 'breadcrumbs' %}</div>
+    
+  	{%- if section.settings.header_background_image == empty and section.settings.header_top_image == empty and section.settings.header_bottom_image == empty -%}
+    {% if coll_metafields.collection__desktop_image != blank %}
+        {% for image in coll_metafields.collection__desktop_image %}
+            <img src="{{image.src}}" class="d-none d-md-block coll-hero-image img-fluid img-full lazyload" alt="Coll Hero Image">
+        {% endfor %}
+    {% endif %}
+    
+    {% if coll_metafields.collection__mobile_image != blank %}
+        {% for image in coll_metafields.collection__mobile_image %}
+            <img src="{{image.src}}"  class="d-block d-md-none coll-hero-image img-fluid img-full lazyload" alt="Coll Hero Image">
+        {% endfor %}
+    {% endif %}
+
+    <div class="col-12 col-md-7 col-xl-5 content">
+        <div class="text">
+            <h1 class="mt-0 mb-2"> {{collection.title}} </h1>
+            <div class="description"> {{collection.description}}</div>
+        </div>
+    </div>
+  	{% endif %}
+
+</div><!-- container -->
+  	{%- if section.settings.header_background_image != empty and section.settings.header_top_image != empty and section.settings.header_bottom_image != empty -%}
+      <div class="collection-heading" style="background:url({{ section.settings.header_background_image | img_url: 'master' }}) {{ section.settings.header_desktop_hex }};background-size:cover;">
+        <div class="col-12 pl-lg-5 ml-lg-5 pt-2 text-v-small breadcrumb__holder">{% render 'breadcrumbs' %}</div>
+        <img src="{{ section.settings.header_top_image | img_url: 'master' }}" class="collection-heading-top" />
+        <div class="collection-heading-content">
+          <div>
+            <h1>{{collection.title}}</h1>
+            <div class="collection-description">
+              <div class="rte">
+             {{collection.description}}
+              </div>
+              <a href="#" class="collection-read-more">Read More</a>
+            </div>
+          </div>
+        </div>
+        <img src="{{ section.settings.header_bottom_image | img_url: 'master' }}" class="collection-bottom" />
+        <img src="{{ section.settings.header_desktop_image | img_url: 'master' }}" class="desktop-ci" />
+      </div>
+  {% endif %}
+
+<div class="collection-listing">
+    <!-- <div class="loader"></div> -->
+	<div class="container collection__container">
+        <div class="row">
+            <div class="col-12 col-lg-11 col-xl-12 mx-auto plp__filter__holder">
+              <div class="collection-top">
+            	<div id="bc-sf-filter-top-sorting"></div>
+                <div id="bc-sf-filter-tree"></div>
+                <div class="price__labels justify-content-between d-none">
+                    <div class="first"></div>
+                    <div class="half"></div>
+                    <div class="last"></div>
+                </div>
+                <div class="strength__filter__titles justify-content-between d-none">
+                    {%- if section.settings.strength_low_copy != empty -%}
+                        <span>{{section.settings.strength_low_copy}}</span>
+                    {%- endif -%}
+                    {%- if section.settings.strength_medium_copy != empty -%}
+                        <span>{{section.settings.strength_medium_copy}}</span>
+                    {%- endif -%}
+                    {%- if section.settings.strength_high_copy != empty -%}
+                        <span>{{section.settings.strength_high_copy}}</span>
+                    {%- endif -%}
+                </div>
+              </div>
+            </div>
+        </div>
+		<div class="row">
+			<div class="col-12">
+				<div class="row">
+					<div class="col pl-lg-1 pr-lg-1">
+						<div id="bc-sf-filter-products" class="row collection-view-four">
+						{% for product in collection.products %}
+						{%- comment %}<locksmith:feb2>{% endcomment -%}
+						  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: product, subject_parent: collection, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+						{%- comment %}</locksmith:feb2>{% endcomment -%}
+						{% else %}
+							<p>{{ 'collections.general.no_matches' | t }}</p>
+						{% endfor %}
+						</div><!-- row -->
+					</div><!-- col -->
+				</div><!-- row -->
+			</div><!-- col -->
+		</div><!-- row -->
+
+	{% render 'collection-bottom-pagination' %}
+	</div><!-- container-fluid -->
+
+</div>
+
+{% endpaginate %}
+
+<script>
+  // Declare bcSfFilterConfig variable
+  var bcSfFilterConfig = {
+    label: {
+      refine: "{{ 'product_filter_search.refine' | t }}",
+      refine_mobile: "{{ 'product_filter_search.refine_mobile' | t }}",
+      clear: "{{ 'product_filter_search.clear' | t }}",
+      clear_all: "{{ 'product_filter_search.clear_all' | t }}",
+      apply: "{{ 'product_filter_search.apply' | t }}",
+	  sale: "{{ 'products.product.on_sale' | t }}",
+	  sold_out: "{{ 'products.product.sold_out' | t }}",
+      breadcrumb_home: {% if product_filter_search.breadcrumb_home != blank %} {{ 'product_filter_search.breadcrumb_home' | t }}" {% else %} "Home" {% endif %},
+      load_more: {% assign temp = 'product_filter_search.load_more' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Load more Products" {% endunless %},
+      show_limit: {% assign temp = 'product_filter_search.show_limit' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Show" {% endunless %},
+      sorting: {% assign temp = 'collections.sorting.title' | t  %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Sorting" {% endunless %},
+      sorting_best_selling: {% assign temp = 'collections.sorting.best_selling' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Best Selling" {% endunless %},
+      sorting_featured: {% assign temp = 'collections.sorting.featured' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Featured" {% endunless %},
+      sorting_title_ascending: {% assign temp = 'collections.sorting.az' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Alphabetically, A-Z" {% endunless %},
+      sorting_title_descending: {% assign temp = 'collections.sorting.za' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Alphabetically, Z-A" {% endunless %},
+      sorting_price_ascending: {% assign temp = 'collections.sorting.price_ascending' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Lowest Price" {% endunless %},
+      sorting_price_descending: {% assign temp = 'collections.sorting.price_descending' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Highest Price" {% endunless %},
+      sorting_date_ascending: {% assign temp = 'collections.sorting.date_ascending' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Date, Old to New" {% endunless %},
+      sorting_date_descending: {% assign temp = 'collections.sorting.date_descending' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Date, New to Old" {% endunless %},
+      sorting_sale_descending: {% assign temp = 'collections.sorting.sale_descending' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "% Off" {% endunless %},
+      sorting_relevance: {% assign temp = 'collections.sorting.relevance' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Relevance" {% endunless %},
+      search_general_title: {% assign temp = 'product_filter_search.search_general_title' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} 'Search' {% endunless %},
+      search_result_header: {% assign temp = 'product_filter_search.search_result_header' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} {% raw %}'Search Results for "{{ terms }}"'{% endraw %} {% endunless %},
+      search_result_empty: {% assign temp = 'product_filter_search.search_result_empty' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} {% raw %}'Your search for "{{ terms }}"" didn\'t match any results'{% endraw %} {% endunless %},
+      search_result_number: {% assign temp = 'product_filter_search.search_result_number' | t %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} {% raw %}'Showing {{ count }} results for "{{ terms }}"'{% endraw %} {% endunless %},
+    },
+    custom: {
+    }
+  };
+</script>
+
+{% schema %}
+{
+    "name": "Collection",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Collection Header"
+        },
+        {
+          "type": "image_picker",
+          "id": "header_background_image",
+          "label": "Header Background Image - Mobile",
+          "info": "Optimal image size: 1125px x 1125px"
+        },
+        {
+          "type": "image_picker",
+          "id": "header_top_image",
+          "label": "Header Top Image - Mobile",
+          "info": "Optimal image size: 355px Height"
+        },
+        {
+          "type": "image_picker",
+          "id": "header_bottom_image",
+          "label": "Header Bottom Image - Mobile",
+          "info": "Optimal image size: 1125px x 1125px"
+        },
+        {
+          "type": "image_picker",
+          "id": "header_desktop_image",
+          "label": "Header Desktop Image",
+          "info": "Optimal image size: 720px"
+        },
+        {
+            "type": "color",
+            "id": "header_desktop_hex",
+            "label": "Header Desktop Background Hex",
+            "default": "#66cce6",
+            "info": "This is a fallback for wide screens"
+        },
+        {
+            "type": "header",
+            "content": "Strength Filter Wording"
+        },
+        {
+            "type": "text",
+            "id": "strength_low_copy",
+            "label": "Low Wording",
+            "default": "Low"
+        },
+        {
+            "type": "text",
+            "id": "strength_medium_copy",
+            "label": "Medium Wording",
+            "default": "Medium"
+        },
+        {
+            "type": "text",
+            "id": "strength_high_copy",
+            "label": "High Wording",
+            "default": "High"
+        }
+    ]
+}
+{% endschema %}

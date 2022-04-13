@@ -1,0 +1,141 @@
+<div class="container mt-5">
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="breadcrumb">
+            <nav aria-label="breadcrumbs">
+            <a href="/" title="Home">Home</a>
+            <span class="seperator" aria-hidden="true">&#187;</span>
+            <a href="/account">Orders</a>
+            <span class="seperator" aria-hidden="true">&#187;</span>
+            <span>{{ 'customer.order.title' | t: name: order.name }}</span>
+            </nav>
+            </div><!-- breadcrumb -->
+        </div><!-- col-12 -->
+    </div><!-- row -->
+
+    <div class="row">
+        <aside class="col-12 col-lg-3 account-sidebar">
+            <h3 class="bolder uppercase mb-4 d-lg-none">My Account {% include 'icon-chevron-down' %}</h3>
+            {% include 'account-sidebar' %}
+        </aside><!-- aside -->
+
+        <section class="col-12 col-lg-9">
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1>Order Number {{ order.name }}</h1>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 col-lg-5">
+                    
+                    <div class="row no-gutters align-items-center mb-3">
+                        <div class="col-8"><p class="uppercase bold mb-0">Order Status</p></div>
+                        <div class="col-4 text-right">
+                            <p class="uppercase bold mb-0">
+                            {% if order.financial_status == 'refunded' %}
+                                Refunded
+                            {% elsif order.financial_status == 'partially_refunded' %}
+                                Partially Refunded
+                            {% else %}
+                                {% if order.cancelled %}
+                                    {{ customer.order.cancel_reason }}
+                                {% else %}
+                                    {{ order.fulfillment_status }}
+                                {% endif %}
+                            {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row no-gutters">
+                        <div class="col-5"><p class="uppercase bold mb-0">Shipped To:</p></div>
+                        <div class="col-7 text-right text-small">
+                            {{ order.shipping_address | format_address }}
+                        </div>
+                    </div>
+
+                    <div class="row no-gutters pb-4 mb-4 border-b text-small">
+                        <div class="col-8"><p class="uppercase bold mb-0">Shipping Method</p></div>
+                        <div class="col-4 text-right">{% for shipping_method in order.shipping_methods %}{{ shipping_method.title }}{% endfor %}</div>
+                    </div>
+
+                    <div class="row no-gutters mb-3">
+                        <div class="col-12">
+                            <p class="mb-0 bold uppercase">Order Number {{ order.name }}</p>
+                        </div><!-- col -->
+                    </div><!-- row -->
+
+                    <div class="row no-gutters pb-3 mb-3 border-b text-small">
+                        <div class="col-6">
+                            <p class="mb-0 uppercase">Order Date</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p class="mb-0 uppercase">{{ 'customer.order.date' | t: date: order.created_at | date: "%d/%m/%Y" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row no-gutters mb-2 text-small">
+                        <div class="col-6"><p class="uppercase mb-0">Subtotal</p></div>
+                        <div class="col-6 text-right"><p class="mb-0">{{ order.subtotal_price | minus: order.tax_price | money }}</p></div>
+                    </div>
+
+                    <div class="row no-gutters mb-2 text-small">
+                        <div class="col-6"><p class="uppercase mb-0">Shipping</p></div>
+                        <div class="col-6 text-right"><p class="mb-0">{{ order.shipping_price | money }}</p></div>
+                    </div>
+
+                    <div class="row no-gutters mb-2 text-small">
+                        <div class="col-6"><p class="uppercase mb-0">Tax</p></div>
+                        <div class="col-6 text-right"><p class="mb-0 bolder">{{ order.tax_price | money }}</p></div>
+                    </div>
+
+                    <div class="row no-gutters text-x-large py-3 mt-3 border-v">
+                        <div class="col-6"><p class="bold uppercase mb-0 text-large">Total</p></div>
+                        <div class="col-6 text-right"><p class="bold mb-0 text-large">{{order.total_price | money}}</p></div>
+                    </div>
+
+                    <div class="row no-gutters mt-3 text-small">
+                        <p>If you have any questions about your order customer serivces can help.</p>
+                        <a href="/pages/contact">Contact Us</a>
+                    </div>
+                    
+
+                </div><!-- col -->
+
+                <div class="col-12 col-lg-1"><div class="login-form-divider grey"></div></div>
+
+                <div class="col-12 col-lg-5">
+                    {% for line_item in order.line_items %}
+                    <div class="row no-gutters mt-3 account-order-product">
+                        <div class="col-3">
+                            <a href="{{line_item.url}}">
+                                <img src="{{ line_item.image | img_url: '100x' }}" class="img-fluid pr-1">
+                            </a>
+                        </div><!-- col -->
+                        <div class="col-6 pl-2 text-small">
+                            <a href="{{line_item.product.url}}" class="uppercase">{{line_item.product.title }}</a>
+
+                            {% unless line_item.product.has_only_default_variant %}
+                                {% for option in line_item.options_with_values %}
+                                    <span class="d-block pt-2">{{option.name}}: {{ option.value }}</span>
+                                {% endfor %}
+                            {% endunless %}
+                            <span class="d-block pt-2">Quantity: {{ line_item.quantity }}</span>
+                        </div>
+                        <div class="col-3 text-right">
+                            {% if line_item.product.compare_at_price > line_item.price %}<span class="product-price-original"><span class="money">{{ line_item.product.compare_at_price | money }}</span></span>{% endif %}
+                            <span class="money bold">{{ line_item.price | money }}</span>
+
+                        </div><!-- col -->
+                    </div>
+                    {% endfor %}
+
+                </div><!-- col -->
+            </div><!-- row -->
+
+        </section><!-- section -->
+    </div><!-- row -->
+</div><!-- container -->

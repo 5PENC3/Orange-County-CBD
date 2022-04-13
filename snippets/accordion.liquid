@@ -1,0 +1,12 @@
+{% assign id =  accordion_title | replace: " ", "_" | escape | downcase | remove: '?'%}
+<div class="accordion-item">
+    <button class="accordion-title" href="#{{ id }}">
+        <h3>{{ accordion_title }}</h3>
+        <div class="plus-minus-icon"></div>
+    </button>
+    <div class="accordion-content">
+        <div class="rte">
+            {{ accordion_description }}
+        </div>
+    </div>
+</div>

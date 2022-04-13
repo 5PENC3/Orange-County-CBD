@@ -1,0 +1,131 @@
+<div class="header-text-features">
+
+    <div class="container-fluid pl-4 pl-lg-5 pr-4 pr-lg-5">
+        <div class="text-features-slick d-block d-lg-flex justify-content-between align-items-center pl-xl-5 pr-xl-5">
+            {% for block in section.blocks %}
+                {% case block.type %}
+                    {% when 'info_message' %}
+                        <div class="text-feature">
+                          	{% if block.settings.icon_fa != empty %}
+                          		{{block.settings.icon_fa}}
+                          	{% else %}
+                              {% case block.settings.icon_select %}
+                                  {% when 'delivery' %}
+                                      {% render 'icon-delivery' %}
+                                  {% when 'animal' %}
+                                      {% render 'icon-animal' %}
+                                  {% when 'trophy' %}
+                                      {% render 'icon-trophy' %}
+                              {% endcase %}
+                          	{% endif %}
+                            {% if block.settings.title != empty %}
+                                <span class="text-feature-heading">{% if block.settings.page_link  %}<a href="{{block.settings.page_link}}">{% endif %}{{ block.settings.title }}{% if block.settings.page_link %}</a>{% endif %}</span>
+                            {% endif %}
+                        </div>
+                    {% when 'trustpilot' %}
+                        <div class="text-feature tp">
+
+							<!-- <div class="trustpilot-widget" data-locale="en-GB" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="60a280da09cef70001359cde" data-style-height="24px" data-style-width="100%" data-theme="light" data-min-review-count="10">
+								<a href="https://uk.trustpilot.com/review/orangecounty-cbd.com" target="_blank" rel="noopener">Trustpilot</a>
+							</div> -->
+							
+							<div class="custom d-flex align-items-center justify-content-center">
+								{%- if block.settings.custom_tp_copy -%}
+									<div class="holder logo__holder">
+										{%- if block.settings.custom_tp_logo_image -%}
+                                      		{% if block.settings.trustpilot_link  %}<a href="{{ block.settings.trustpilot_link }}" target="_blank">{% endif %}<img src="{{ block.settings.custom_tp_logo_image  | img_url: '100x' }}" width="100%" height="100%" class="img-fluid mx-auto" alt="TP Logo Image">{% if block.settings.trustpilot_link  %}</a>{% endif %}
+										{%- endif -%}
+									</div>
+									<div class="holder">
+										{%- if block.settings.custom_tp_image -%}
+											{% if block.settings.trustpilot_link  %}<a href="{{ block.settings.trustpilot_link }}" target="_blank">{% endif %}<img src="{{ block.settings.custom_tp_image  | img_url: '120x' }}" width="100%" height="100%" class="img-fluid mx-auto" alt="TP Image">{% if block.settings.trustpilot_link  %}</a>{% endif %}
+										{%- endif -%}
+									</div>
+									<span class="pl-1 text-feature-heading">{% if block.settings.trustpilot_link  %}<a href="{{ block.settings.trustpilot_link }}" target="_blank">{% endif %}{{ block.settings.custom_tp_copy }}{% if block.settings.trustpilot_link  %}</a>{% endif %}</span>
+								{%- endif -%}
+							</div>
+
+                        </div>
+                {% endcase %}
+            {% endfor %}
+        </div><!-- text-features -->
+    </div><!-- container -->
+</div><!-- header-text-features -->
+
+{% schema %}
+{
+    "name": "Header Messages",
+    "max_blocks": 5,
+    "blocks": [
+		{
+			"type": "info_message",
+			"name": "Info Message",
+			"settings": [
+				{
+					"type":      "select",
+					"id":        "icon_select",
+					"label":     "Icon Select",
+					"options": [
+						{
+							"value": "delivery",
+							"label": "Delivery"
+						},
+						{
+							"value": "animal",
+							"label": "Animal"
+						},
+						{
+							"value": "trophy",
+							"label": "Trophy"
+						}
+					],
+					"default":   "delivery"
+				},
+				{
+                    "type":     "text",
+				    "id":       "title",
+				    "label":    "Heading"
+				},
+				{
+                    "type":     "text",
+				    "id":       "icon_fa",
+				    "label":    "FontAwesome"
+				},
+				{
+                    "type":     "url",
+				    "id":       "page_link",
+				    "label":    "Link"
+				}
+			]
+		},
+		{
+			"type": "trustpilot",
+			"name": "Trustpilot",
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "custom_tp_logo_image",
+					"label": "Trustpilot Logo Image",
+					"info": "Optimal image size: 120 x 25"
+				},
+				{
+					"type": "image_picker",
+					"id": "custom_tp_image",
+					"label": "Trustpilot Stars Image",
+					"info": "Optimal image size: 120 x 25"
+				},
+				{
+					"type":     "text",
+					"id":       "custom_tp_copy",
+					"label":    "Trustpilot Copy"
+				},
+				{
+					"type":     "url",
+					"id":       "trustpilot_link",
+					"label":    "Trustpilot Link"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

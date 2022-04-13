@@ -1,0 +1,11 @@
+{% if content_for_header contains 'shopifyorderlimits.s3.amazonaws.com' %}
+{% if shop.permanent_domain == 'orange-countycbd.myshopify.com' %}
+<script type="text/javascript">
+minMaxifyContext={
+  customer: { id: {{ customer.id | json }}, tags: {{ customer.tags | json }} }
+};
+</script><script src="https://shopifyorderlimits.s3.amazonaws.com/limits/orange-countycbd.myshopify.com?v=89c&r=20220407110428&shop=orange-countycbd.myshopify.com"></script>
+{% endif %}
+{% else %}
+<script type="text/javascript">console.error("MinMaxify is deactivated for this website. Please don't forget to remove minmaxify-head.liquid still being referenced by theme.liquid")</script>
+{% endif %}

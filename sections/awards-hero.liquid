@@ -1,0 +1,86 @@
+<div class="container-fluid hero__custom p-0">
+
+    <div class="col-12 pl-lg-5 ml-lg-5 pt-2 text-v-small breadcrumb__holder">{% render 'breadcrumbs' %}</div>
+    
+    {%- if section.settings.desktop_image -%}
+		<img data-src="{{ section.settings.desktop_image | img_url: '1920x' }}" class="d-none d-md-block img-fluid img-full lazyload" alt="Awards Hero Image">
+    {%- endif -%}
+    
+    {%- if section.settings.mob_image -%}
+		<img data-src="{{ section.settings.mob_image | img_url: '540x' }}" class="d-block d-md-none img-fluid img-full lazyload" alt="Awards Hero Image">
+    {%- endif -%}
+
+	{% if section.settings.show_content %}
+		<div class="col-12 col-md-7 col-xl-5 content">
+			<div class="text">
+
+				{%- if section.settings.hero_title != empty -%}
+					<h1 class="mt-0 mb-2"> {{section.settings.hero_title}} </h1>
+				{%- else -%}
+					<h1 class="mt-0 mb-2"> {{page.title}} </h1>
+				{%- endif -%}
+
+				{%- if section.settings.hero_copy != empty -%}
+					<p class="description mb-0"> {{section.settings.hero_copy}}</p>
+				{%- else -%}
+					<p class="description mb-0">{{page.content}}</p>
+				{%- endif -%}
+
+			</div>
+		</div>
+	{% endif %}
+
+</div><!-- container -->
+
+{% schema %}
+{
+    "name": "Awards Hero",
+    "settings": [
+	{
+		"type": 	"header",
+		"content": 	"Images"
+	},
+	{
+		"type": 	"header",
+		"content": 	"Desktop Image"
+	},
+	  {
+	  "type": "image_picker",
+	  "id": "desktop_image",
+	  "label": "Desktop Image",
+	  "info": "Optimal image size: 1920 x 720, the image ratio is 8 / 3."
+	},
+	{
+		"type": 	"header",
+		"content": 	"Mobile Image"
+	},
+	{
+	  "type": "image_picker",
+	  "id": "mob_image",
+	  "label": "Standard Image",
+	  "info": "Optimal image size: 540 x 540, the image ratio is 4 / 4."
+	},
+	{
+		"type": 	"header",
+		"content": 	"Copy"
+	},
+	{
+		"type":     "checkbox",
+		"id":       "show_content",
+		"default":  true,
+		"label":    "Show Content?"
+	},
+	{
+	   "type":      "text",
+	   "id":        "hero_title",
+	   "label":     "Title",
+	   "default":   "Hero Title"
+	},
+	{
+	   "type":      "text",
+	   "id":        "hero_copy",
+	   "label":     "Hero Copy"
+	}
+  ]
+}
+{% endschema %}

@@ -1,0 +1,44 @@
+<!-- /snippets/social-sharing.liquid -->
+<div class="social-sharing">
+
+    {% if settings.share_whatsapp %}
+        <a href="whatsapp://send?text={{settings.share_whatsapp_text}} {{ shop.url | append: share_permalink}}" class="d-lg-none link" target="_blank">
+            {% include 'icon-whatsapp' %}
+            <span aria-hidden="true" class="sr-only">{{ 'general.social.share_on_whatsapp' | t }}</span>
+            <span class="sr-only">{{ 'general.social.alt_text.share_on_whatsapp' | t }}</span>
+        </a>
+    {% endif %}
+
+    {% if settings.share_facebook %}
+        <a href="//www.facebook.com/sharer.php?u={{ shop.url | append: share_permalink }}" class="link" target="_blank">
+            {% include 'icon-facebook' %}
+            <span aria-hidden="true" class="sr-only">{{ 'general.social.share_on_facebook' | t }}</span>
+            <span class="sr-only">{{ 'general.social.alt_text.share_on_facebook' | t }}</span>
+        </a>
+    {% endif %}
+
+    {% if settings.share_linkedin %}
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ shop.url | append: share_permalink}}" class="link" target="_blank">
+            {% include 'icon-linkedin' %}
+            <span aria-hidden="true" class="sr-only">{{ 'general.social.share_on_linkedin' | t }}</span>
+            <span class="sr-only">{{ 'general.social.alt_text.share_on_linkedin' | t }}</span>
+        </a>
+    {% endif %}
+
+    {% if settings.share_twitter %}
+        <a href="//twitter.com/share?text={{ share_title | url_param_escape }}&amp;url={{ shop.url | append: share_permalink }}" class="link" target="_blank">
+            {% include 'icon-twitter' %}
+            <span aria-hidden="true" class="sr-only">{{ 'general.social.share_on_twitter' | t }}</span>
+            <span class="sr-only">{{ 'general.social.alt_text.share_on_twitter' | t }}</span>
+        </a>
+    {% endif %}
+
+    {% if settings.share_pinterest %}
+        <a href="//pinterest.com/pin/create/button/?url={{ shop.url | append: share_permalink }}&amp;media={{ share_image | img_url: '1024x1024' }}&amp;description={{ share_title | url_param_escape }}" target="_blank">
+            {% include 'icon-pinterest' %}
+            <span aria-hidden="true" class="sr-only">{{ 'general.social.share_on_pinterest' | t }}</span>
+            <span class="sr-only">{{ 'general.social.alt_text.share_on_pinterest' | t }}</span>
+        </a>
+    {% endif %}
+
+</div>

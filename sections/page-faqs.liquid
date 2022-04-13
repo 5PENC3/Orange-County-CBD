@@ -1,0 +1,141 @@
+{% include 'hero-large' %}
+
+<div class="container">
+    <ul class="topic-list">
+        {% for block in section.blocks %}
+            {% case block.type  %}
+                {% when 'topic' %}
+                    <li>
+                        {% assign anchor = block.settings.topic_title | replace: " ", "_" | escape | downcase | remove: '?'%}
+                        <a class="scroll-to" href="#{{ anchor }}">{{ block.settings.topic_title }}</a>
+                    </li>
+            {% endcase %}
+        {% endfor %}
+    </ul>
+    <div class="row col-xl-7 mx-auto d-flex p-0">
+        <div class="accordion-container flex-grow-1">
+            {% for block in section.blocks %}
+                {% case block.type  %}
+                    {% when 'faq' %}
+                        {% assign accordion_title = block.settings.faq_question %}
+                        {% assign accordion_description = block.settings.faq_answer %}
+                        {% include 'accordion' %}
+                    {% when 'topic' %}
+                        {% assign anchor = block.settings.topic_title | replace: " ", "_" | escape | downcase | remove: '?'%}
+                        <h2 id="{{ anchor }}" class="h4 m-0 mb-3 {% unless forloop.first %}mt-4{% endunless %}">{{ block.settings.topic_title }}</h2>
+                {% endcase %}
+            {% endfor %}
+        </div><!-- accordion-container -->
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "FAQs",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content settings"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "select",
+            "id": "content_color",
+            "label": "Content Colour",
+            "options": [
+                {
+                    "value": "#ffffff",
+                    "label": "Light"
+                },
+                {
+                    "value": "#322d26",
+                    "label": "Dark"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "content_alignment",
+            "label": "Content Alignment",
+            "options": [
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Image settings"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image - Desktop",
+            "info": "Optimal image size: 1440 x 670"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_mob",
+            "label": "Image - Mobile",
+            "info": "Optimal image size: 414 x 554"
+        },
+        {
+            "type": "header",
+            "content": "Additional settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_breadcrumbs",
+            "label": "Show Breadcrumbs",
+            "default": true
+        }
+	],
+    "blocks": [
+		{
+			"type": "topic",
+			"name": "Topic Title",
+			"settings": [
+				{
+					"type": "text",
+					"id": "topic_title",
+					"label": "Topic Title"
+				}
+			]
+		},
+		{
+			"type": "faq",
+			"name": "FAQ",
+			"settings": [
+				{
+					"type": "text",
+					"id": "faq_question",
+					"label": "Question"
+				},
+				{
+					"type": "richtext",
+					"id": "faq_answer",
+					"label": "Answer"
+				}
+			]
+		}
+    ]
+}
+{% endschema %}

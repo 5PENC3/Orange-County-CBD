@@ -1,0 +1,76 @@
+{% assign bg = section.settings.background | img_url: "1024x" %}
+<div class="page-bg" {% if bg != blank %} style="background-image: url('{{ bg }}')" {% endif %}>
+
+    {% include 'breadcrumbs-container' %}
+
+    <div class="container py-5 account__forms">
+        <div class="mx-auto row pb-5">
+            <div class="panel mx-auto">
+                <div class="px-md-5 py-md-3">
+                    <h1 class="h2 my-0 mb-4 text-center">Register</h1>
+                    {% form 'create_customer', class: "validation-invalid" %}
+                        <div class="row">
+                            <div class="col-12">
+                                {{ form.errors | default_errors }}
+                            </div>
+                            <div class="form-group col-12">
+                                <label class="sr-only required" for="FirstName">
+                                    {{ 'customer.register.first_name' | t }}
+                                </label>
+                                <input type="text" name="customer[first_name]" class="required" id="FirstName" placeholder="First Name" autofocus {% if form.first_name %} value="{{ form.first_name }}" {% endif %}>
+                            </div><!-- col -->
+
+                            <div class="form-group col-12">
+                                <label class="sr-only required" for="LastName">
+                                    {{ 'customer.register.last_name' | t }}
+                                </label>
+                                <input type="text" name="customer[last_name]" class="required" id="LastName" placeholder="Surname" {% if form.last_name %} value="{{ form.last_name }}" {% endif %}>
+                            </div><!-- col -->
+
+                            <div class="form-group col-12">
+                                <label class="sr-only required" for="Email">
+                                    {{ 'customer.register.email' | t }}
+                                </label>
+                                <input type="email" name="customer[email]" class="required" id="Email" placeholder="Email" class="{% if form.errors contains 'email' %}input-error{% endif %}" value="{% if form.email %}{{ form.email }}{% endif %}" spellcheck="false" autocomplete="off" autocapitalize="off">
+                            </div><!-- col -->
+
+                            <div class="form-group col-12">
+                                <label class="sr-only required password-required" for="Password">Create Password</label>
+                                <input class="required password-required" id="PasswordOne" placeholder="Password" type="password">
+                            </div><!-- col -->
+
+                            <div class="form-group col-12">
+                                <label class="sr-only required password-required" for="CreatePassword">
+                                    Confirm Password
+                                </label>
+                                <input type="password" class="required password-required" placeholder="Confirm Password" name="customer[password]" id="CreatePassword" class="{% if form.errors contains 'password' %}input-error{% endif %}">
+                            </div><!-- col -->
+                        </div>
+                        <div class="row">
+                            <div class="col-12 pb-4 text-center">
+                                <button class="btn btn-primary" type="submit">Create Account</button>
+                            </div><!-- col -->
+                            <div class="col-12 text-center">
+                                <a class="text-body-color" href="/account/login">{{ 'customer.register.existing_account' | t }}</a>
+                            </div>
+                        </div><!-- row -->
+                    {% endform %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "Customer Register",
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "background",
+			"label": "Background Image"
+		}
+    ]
+}
+{% endschema %}

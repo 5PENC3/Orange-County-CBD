@@ -1,0 +1,8 @@
+<ul class="account-sidebar-navigation">
+    {% for link in linklists.account-sidebar.links %}
+        {%- comment %}<locksmith:cf7d>{% endcomment -%}
+          {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists.account-sidebar, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+        {%- comment %}</locksmith:cf7d>{% endcomment -%}
+        <li><a href="{{link.url}}" class="{% if link.active %}current{% endif %}">{{link.title}}</a></li>
+    {% endfor %}
+</ul>

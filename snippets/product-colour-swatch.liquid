@@ -1,0 +1,26 @@
+{% comment %} 
+BG: Richie's original code, find the Cap C and split based on that.
+{% endcomment %}
+{% assign current_product_title = product.title %}
+{% assign current_product_split = product.title | split: 'C' | first %}
+
+<div class="product-related-colours">
+    <h3>Colour:</h3>
+    <ul>
+    {% paginate collection.products by 400 %}
+    {% for product in collection.products %}
+        {%- comment %}<locksmith:c026>{% endcomment -%}
+          {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: product, subject_parent: collection, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+        {%- comment %}</locksmith:c026>{% endcomment -%}
+        {% if product.title contains current_product_split %}
+            <li class="{% if product.title == current_product_title %}active{% endif %}">
+                <a href="{{shop.url}}{{collection.url}}{{product.url}}">
+                    <img src="{{ product.featured_image | img_url: '100x' }}" class="img-fluid primary-image" alt="{{ product.title }}">
+                    <img src="{{ product.images[1].src | img_url: '100x' }}" class="img-fluid secondary-image" alt="{{ product.title  }}">
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+    {% endpaginate %}
+    </ul>
+</div>

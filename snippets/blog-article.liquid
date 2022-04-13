@@ -1,0 +1,14 @@
+<article class="article__item" id="blog__article" data-equalize="content">
+    <a href="{{article.url}}">
+        <img data-src="{{ article.image | img_url: '400x300' }}" class="img-fluid img-full lazyload" alt="Blog Article Image">
+        <div class="content" data-equalize-watch="content">
+            <p class="date mb-1">
+                {% capture date %}
+                    {{ article.published_at | time_tag: format: 'day_month_year' }}
+                {% endcapture %}
+                {{ date }}
+            </p>
+            <h6 class="m-0">{{article.title}}</h6>
+        </div>
+    </a>
+</article>

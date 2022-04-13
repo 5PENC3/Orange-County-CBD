@@ -1,0 +1,46 @@
+<header class="flex-wrap mb-5 hero-large d-flex flex-column align-items-center justify-content-center {% if section.settings.image_mob != blank or section.settings.image != blank %} has-image {% endif %}" style="color: {{ section.settings.content_color }};">
+
+    {% if section.settings.show_breadcrumbs %}
+        {% include 'breadcrumbs-container' %}
+        <!-- /breadcrumbs -->
+    {% endif %}
+
+    <div class="container hero-large__content" style="text-align: {{ section.settings.content_alignment }};">
+        <h1 class="m-0 p-0 h2 hero-large__title">
+            {% if section.settings.title != blank %}
+                {{ section.settings.title }}
+            {% elsif hero_title != blank %}
+                {{ hero_title }}
+            {% else %}
+                {{ page.title }}
+            {% endif %}
+        </h1><!-- /title -->
+
+        {% if section.settings.description != blank %}
+            <div class="m-0 mt-3 hero-large__description">{{ section.settings.description }}</div>
+        {% endif %}<!-- /description -->
+    </div>
+
+    {% if section.settings.image_mob != blank or section.settings.image != blank %}
+        <picture class="hero-large__image">
+            <source media="(max-width: 767px)" srcset="{{ section.settings.image_mob | img_url: '540x' }}">
+            <source media="(max-width: 800px)" srcset="{{ section.settings.image | img_url: '1440x' }}">
+            <source media="(max-width: 1440px)" srcset="{{ section.settings.image | img_url: '1920x' }}">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ section.settings.image | img_url: '1920x' }}" class="lazyload" alt="{{ section.settings.image.alt }}">
+        </picture>
+        <!-- /image -->
+    {% endif %}
+
+    {% if section.settings.links != blank and linklists[section.settings.links].links.size > 0  %}
+        <ul class="hero-large__tabs">
+            {% for link in linklists[section.settings.links].links %}
+                {%- comment %}<locksmith:d4a7>{% endcomment -%}
+                  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: linklists[section.settings.links], variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                {%- comment %}</locksmith:d4a7>{% endcomment -%}
+                <li class="{% if link.current %}active{% endif %}">
+                    <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</header>

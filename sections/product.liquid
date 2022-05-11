@@ -264,6 +264,14 @@
 				{% endif %}	
 		
 				{% endform %}
+          
+          				<div class="klarna__snippet">
+          			<script
+							async
+ 							src="https://eu-library.klarnaservices.com/lib.js"
+  							data-client-id="af57aacc-eecd-56a1-9e87-a6c540532e3b"
+					</script>	
+          		</div>
 
 				{% if settings.show_delivery_timer %}
 					<div class="pdp__delivery__timer">
@@ -276,13 +284,6 @@
 					</div>
 				{% endif %}	
 
-				<div class="klarna__snippet">
-          			<script
-							async
- 							src="https://eu-library.klarnaservices.com/lib.js"
-  							data-client-id="af57aacc-eecd-56a1-9e87-a6c540532e3b"
-					</script>	
-          		</div>
 
 				{% unless product == empty %}
 				<script type="application/json" data-product-json>
